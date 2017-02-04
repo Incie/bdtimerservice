@@ -25,6 +25,30 @@ const files = {
 };
 
 app.get('/', function(req, res){res.sendFile(files.index);});
+
+app.get('/servernames', function(req, res){
+    res.send({
+        names:[
+            "Velia 2",
+            "Balenos 2",
+            "Serendia 2",
+            "Calpheon 2",
+            "Mediah 2",
+            "Valencia 2"
+        ]
+    });
+});
+
+app.post('/update', function(req, res){
+    const payload = req.body;
+
+    if( payload.user === 'superadmin' || payload.password === 'hoorayforrolf'){
+        db.update(payload.region, payload.serverid, payload.time, payload.horseClass);
+    }
+
+    res.send();
+});
+
 app.get('/data', function(req, res) { res.send( db.getAll() ) });
 // app.use( '/api', apiRouter );
 

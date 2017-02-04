@@ -21,6 +21,20 @@
                 <div id="timings-us"></div>
             </span>
         </div>
+        <div style="border:1px solid red; border-radius: 3px; margin-top: 150px">
+            <h4>Push Update</h4>
+            <span style="display: inline-block">
+                <div>Region <input id="update-region" type="text" placeholder="eu or us"/></div>
+                <div>Server <input id="update-serverid" type="text" placeholder="Server id [Number]"/></div>
+                <div>Horse Class <input id="update-horseclass" type="text"  placeholder="Number 1 - 10"/></div>
+                <div>Time <input id="update-time" type="text" style="" placeholder="Number of minutes"/></div>
+                <div><button onclick="sendTimingUpdate()">Send</button></div>
+            </span>
+            <span style="display: inline-block">
+                <div>Login <input id="update-user" type="text" placeholder="User"/></div>
+                <div>Password <input id="update-password" type="password" placeholder="Password"/></div>
+            </span>
+        </div>
     </div>
 </body>
 </html>

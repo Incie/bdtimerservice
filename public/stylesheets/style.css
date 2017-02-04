@@ -3,6 +3,9 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
+input {
+    text-align: center
+}
 
 #main {
     width: 75%;
@@ -15,6 +18,7 @@ body {
 }
 
 .region {
+    padding: 10px;
     display: inline-block;
     width: 40%;
     border: 1px solid gray;
@@ -23,6 +27,14 @@ body {
 }
 
 .timingRow {
-    width: 90%;
+    padding: 5px;
+    margin: 2px;
+    width: 100%;
     border: 1px solid black;
 }
+
+.timingServer {
+    font-size: 125%;
+    text-decoration: underline;
+}
+
