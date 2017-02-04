@@ -1,0 +1,28 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+
+#main {
+    width: 75%;
+    margin: auto;
+    border: 1px solid black;
+    border-radius: 5px;
+    height: 100%;
+    padding: 50px;
+    text-align: center;
+}
+
+.region {
+    display: inline-block;
+    width: 40%;
+    border: 1px solid gray;
+    border-radius: 5px;
+    min-width: 500px;
+}
+
+.timingRow {
+    width: 90%;
+    border: 1px solid black;
+}
