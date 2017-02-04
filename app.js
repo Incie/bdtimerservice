@@ -42,9 +42,9 @@ app.get('/servernames', function(req, res){
 app.post('/update', function(req, res){
     const payload = req.body;
 
-    if( payload.user === 'superadmin' || payload.password === 'hoorayforrolf'){
-        db.update(payload.region, payload.serverid, payload.time, payload.horseClass);
-    }
+    // if( payload.user === 'superadmin' || payload.password === 'hoorayforrolf'){
+        db.update(payload.region, payload.serverid, Number(payload.time), payload.horseClass);
+    // }
 
     res.send();
 });

@@ -29,14 +29,25 @@ function refreshTimings(){
         } );
 }
 
+function radioValue(name){
+    let elements = document.getElementsByName(name);
+
+    let checkedValue = "none";
+    elements.forEach( e => {
+        if( e.checked )
+            checkedValue = e.value;
+    });
+    return checkedValue;
+}
+
 function elementValue(id){
     return document.getElementById(id).value;
 }
 
 function sendTimingUpdate(){
-    let region = elementValue("update-region");
-    let serverid = elementValue("update-serverid");
-    let horseclass = elementValue("update-horseclass");
+    let region = radioValue("update-region");
+    let serverid = radioValue("update-serverid");
+    let horseclass = radioValue("update-horseclass");
     let time = elementValue("update-time");
 
     const payload = {
@@ -44,8 +55,8 @@ function sendTimingUpdate(){
         serverid: serverid,
         horseClass: horseclass,
         time: new Date().getTime() + seconds( Number(time) * 60),
-        user: elementValue('update-user'),
-        password: elementValue('update-password'),
+        // user: elementValue('update-user'),
+        // password: elementValue('update-password'),
     };
 
     fetch("/update", {
