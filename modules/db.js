@@ -2,7 +2,7 @@ let jsonFile = require('jsonfile');
 
 let dbModule = {};
 
-let jsonDbFile = __dirname + '\\' + 'db.json';
+let jsonDbFile = __dirname + '/' + 'db.json';
 
 
 const emptyRow = { horseClass: -1, startTime: 0 };
