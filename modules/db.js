@@ -42,6 +42,7 @@ dbModule.update = function(region, id, time, horseClass){
 
     dbData[region].data[id].startTime = time;
     dbData[region].data[id].horseClass = horseClass;
+    dbData[region].data[id].registeredTime = new Date().getTime();
     saveDBToFile();
 };
 

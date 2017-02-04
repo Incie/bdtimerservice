@@ -13,12 +13,19 @@ function seconds(s){
     return 1000 * s;
 }
 
+let refreshTimeout = undefined;
+
 function refreshTimings(){
+    if( refreshTimeout !== undefined ){
+        clearTimeout(refreshTimeout);
+        refreshTimeout = undefined;
+    }
+
     fetch('/data')
         .then( response => response.json() )
         .then( json => {
             updateTimings(json);
-            setTimeout(refreshTimings, seconds(15) );
+            refreshTimeout = setTimeout(refreshTimings, seconds(15) );
         } );
 }
 
@@ -66,7 +73,19 @@ function updateRegionData(regionElement, regionData){
 
         let timeSpanString = timeSpanInMinutes(date);
 
-        let text = createDiv(serverNames.names[i], "(ID:"+i+')', "timingServer") + createHorseClassDiv(e.horseClass) + createDiv('Time', timeSpanString + ' (' + formatDate(date)+')' );
+        let text = createDiv(serverNames.names[i], "(ID:"+i+')', "timingServer")
+        text += createHorseClassDiv(e.horseClass);
+        text += createDiv('', timeSpanString + ' (' + formatDate(date)+')' );
+
+        if( e.registeredTime != undefined ){
+            let registeredTime = new Date();
+            registeredTime.setTime(e.registeredTime);
+
+            let milliseconds = new Date().getTime() - registeredTime.getTime();
+            let minutes = Math.floor((milliseconds / 1000) / 60);
+            text += simpleDiv(`Registered ${minutes} minutes ago`);
+        }
+
         regionElement.innerHTML += '<div class="timingRow">' + text + '</div>';
     });
 }
@@ -74,14 +93,14 @@ function updateRegionData(regionElement, regionData){
 function createHorseClassDiv(horseClass){
     let data = '';
     for( let i = 1; i <= 8; i += 1 ){
-        let className = 'btn-warning';
+        let className = 'btn-info';
         if( i == horseClass )
-            className = 'btn-success';
+            className = 'btn-danger';
 
-        data += '<span style="padding: 3px; border-radius: 4px; margin: 2px;" class="'+className+'">' + i + '</span>';
+        data += `<span style="padding: 3px; border-radius: 4px; margin: 6px 2px;" class="${className}">${i}</span>`;
     }
 
-    return '<div style="margin: 2px;">'+data+'</div>';
+    return `<div style="margin: 2px;">Class: ${data}</div>`;
 }
 
 function createDiv(type, text, className){
@@ -89,13 +108,13 @@ function createDiv(type, text, className){
     if( className !== undefined )
         divStartTag = '<div class=' + className + '>';
 
-    let e = '<span style="width:50%; padding-right: 5px;">' + type + '</span>';
-    e += '<span style="width:50%">' + text + '</span>';
+    let e = `<span style="width:50%; padding-right: 5px;">${type}</span>`;
+    e += `<span style="width:50%">${text}</span>`;
     return divStartTag + e + '</div>';
 }
 
 function simpleDiv(text, className){
-    return "<div class="+className+">"+text+"</div>";
+    return `<div class=${className}>${text}</div>`;
 }
 
 function timeSpanInMinutes(date){
@@ -105,14 +124,13 @@ function timeSpanInMinutes(date){
     if( diffInMinutes < 1 ){
         let className = "btn-success";
         if( diffInMinutes > -10 ) className = "btn-warning";
-        return simpleDiv("in " + (diffInMinutes * -1) + "minutes", className);
+        return simpleDiv(`in ${diffInMinutes * -1} minutes`, className);
     }
-
 
     return simpleDiv(diffInMinutes + " minutes ago", "btn-danger");
 }
 
 function formatDate(date){
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dev"];
-    return date.getFullYear() + '-' + monthNames[date.getMonth()] + '-' + date.getDate() + " - " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dev"];
+    return `${date.getFullYear()}-${monthNames[date.getMonth()]}-${date.getDate()} - ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
 }

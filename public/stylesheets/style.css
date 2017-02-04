@@ -10,7 +10,6 @@ input {
 #main {
     width: 75%;
     margin: auto;
-    border: 1px solid black;
     border-radius: 5px;
     height: 100%;
     padding: 50px;
@@ -27,6 +26,8 @@ input {
 }
 
 .timingRow {
+    border-radius: 15px;
+    background-color: #ddd;
     padding: 5px;
     margin: 2px;
     width: 100%;
@@ -36,5 +37,6 @@ input {
 .timingServer {
     font-size: 125%;
     text-decoration: underline;
+    margin-bottom: 7px;
 }
 
