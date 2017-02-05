@@ -142,7 +142,8 @@ function timeSpanInMinutes(date){
             return simpleDiv(`in ${diffInMinutes * -1} minutes`, className);
     }
 
-    return simpleDiv(diffInMinutes + " minutes ago", "btn-default");
+    //return simpleDiv(diffInMinutes + " minutes ago", "btn-default");
+    return simpleDiv(diffInMinutes + " minutes ago");
 }
 
 function formatDate(date){
