@@ -136,7 +136,7 @@ function timeSpanInMinutes(date){
     if( diffInMinutes < 1 ){
         let className = "btn-success";
         if( diffInMinutes > -10 ) className = "btn-warning";
-        if( diffInMinutes > -1 )
+        if( diffInMinutes > 0 )
             return simpleDiv(`in less than 1 minute`, className);
         else
             return simpleDiv(`in ${diffInMinutes * -1} minutes`, className);
