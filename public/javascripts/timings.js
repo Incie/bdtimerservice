@@ -131,14 +131,18 @@ function simpleDiv(text, className){
 function timeSpanInMinutes(date){
     const diff = new Date().getTime() - date.getTime();
     const diffInMinutes = Math.floor((diff / 1000) / 60);
+    diffInMinutes += 1; //A timer of 1:59 ingame is always shown as 1 minute, so a user inputting time in minutes can be wrong up by up to 1 minute
 
     if( diffInMinutes < 1 ){
         let className = "btn-success";
         if( diffInMinutes > -10 ) className = "btn-warning";
-        return simpleDiv(`in ${diffInMinutes * -1} minutes`, className);
+        if( diffInMinutes > -1 )
+            return simpleDiv(`in less than ${diffInMinutes * -1} minute`, className);
+        else
+            return simpleDiv(`in ${diffInMinutes * -1} minutes`, className);
     }
 
-    return simpleDiv(diffInMinutes + " minutes ago", "btn-danger");
+    return simpleDiv(diffInMinutes + " minutes ago", "btn-default");
 }
 
 function formatDate(date){
