@@ -131,7 +131,7 @@ function simpleDiv(text, className){
 function timeSpanInMinutes(date){
     const diff = new Date().getTime() - date.getTime();
     var diffInMinutes = Math.floor((diff / 1000) / 60);
-    diffInMinutes += 1.0f; //A timer of 1:59 ingame is always shown as 1 minute, so a user inputting time in minutes can be wrong up by up to 1 minute
+    //diffInMinutes += 1.0f; //A timer of 1:59 ingame is always shown as 1 minute, so a user inputting time in minutes can be wrong up by up to 1 minute
 
     if( diffInMinutes < 1 ){
         let className = "btn-success";
