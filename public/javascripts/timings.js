@@ -131,19 +131,18 @@ function simpleDiv(text, className){
 function timeSpanInMinutes(date){
     const diff = new Date().getTime() - date.getTime();
     const diffInMinutes = Math.floor((diff / 1000) / 60);
-    //diffInMinutes += 1; //A timer of 1:59 ingame is always shown as 1 minute, so a user inputting time in minutes can be wrong up by up to 1 minute
+    diffInMinutes += 1.0f; //A timer of 1:59 ingame is always shown as 1 minute, so a user inputting time in minutes can be wrong up by up to 1 minute
 
     if( diffInMinutes < 1 ){
         let className = "btn-success";
         if( diffInMinutes > -10 ) className = "btn-warning";
-        //if( diffInMinutes > -1 )
-          //  return simpleDiv(`in less than ${diffInMinutes * -1} minute`, className);
-        //else
+        if( diffInMinutes > -1 )
+            return simpleDiv(`in less than ${diffInMinutes * -1} minute`, className);
+        else
             return simpleDiv(`in ${diffInMinutes * -1} minutes`, className);
     }
 
-    //return simpleDiv(diffInMinutes + " minutes ago", "btn-default");
-    return simpleDiv(diffInMinutes + " minutes ago");
+    return simpleDiv(diffInMinutes + " minutes ago"); //Removed colour to make it less distracting. An unavailable race should draw no one's attention.
 }
 
 function formatDate(date){
