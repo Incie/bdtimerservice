@@ -54,7 +54,8 @@ function sendTimingUpdate(){
         region: region,
         serverid: serverid,
         horseClass: horseclass,
-        time: new Date().getTime() + seconds( Number(time) * 60) + 1, //A timer of 1:59 ingame is always shown as 1 minute, so a user inputting time in minutes can be wrong up by up to 1 minute
+        //TODO: Only add the extra 5 minutes if a "registration is available" checkbox is unchecked
+        time: new Date().getTime() + seconds( Number(time) * 60) + 300000,
         // user: elementValue('update-user'),
         // password: elementValue('update-password'),
     };
@@ -82,12 +83,18 @@ function updateRegionData(regionElement, regionData){
         let date = new Date();
         date.setTime(e.startTime);
 
-        let timeSpanString = timeSpanInMinutes(date);
+        const diffInMilliseconds = new Date().getTime() - date.getTime();
+        let diffInMinutes = Math.floor((diffInMilliseconds / 1000) / 60);
+        let curStatusString = currentStatus(diffInMinutes);
+        let timeSpanString = timeSpanInMinutes(diffInMinutes);
 
-        let text = createDiv(serverNames.names[i], "(ID:"+i+')', "timingServer")
+        //Commenting out some information to make it look tidier
+        //let text = createDiv(serverNames.names[i], "(ID:"+i+')', "timingServer")
+        let text = simpleDiv(serverNames.names[i], "timingServer")
         text += createHorseClassDiv(e.horseClass);
-        text += createDiv('', timeSpanString + ' (' + formatDate(date)+')' );
+        text += createDiv('', curStatusString + timeSpanString /*+ ' (' + formatDate(date)+')'*/ );
 
+        /*
         if( e.registeredTime != undefined ){
             let registeredTime = new Date();
             registeredTime.setTime(e.registeredTime);
@@ -96,6 +103,7 @@ function updateRegionData(regionElement, regionData){
             let minutes = Math.floor((milliseconds / 1000) / 60);
             text += simpleDiv(`Registered ${minutes} minutes ago`);
         }
+        */
 
         regionElement.innerHTML += '<div class="timingRow">' + text + '</div>';
     });
@@ -128,17 +136,30 @@ function simpleDiv(text, className){
     return `<div class=${className}>${text}</div>`;
 }
 
-function timeSpanInMinutes(date){
-    const diffInMilliseconds = new Date().getTime() - date.getTime();
-    let diffInMinutes = Math.floor((diffInMilliseconds / 1000) / 60);
+function currentStatus(diffInMinutes){
+    if( diffInMinutes > 1 )
+        return simpleDiv("Last observed race was");
+    else if( diffInMinutes > -5 )
+        return simpleDiv("Registration is currently available and closes", "btn-warning");
+    else if( diffInMinutes > -10 )
+        return simpleDiv("Registration will be available very soon", "btn-primary");
+    else
+        return simpleDiv("Registration will be available", "btn-success");
+}
 
+function timeSpanInMinutes(diffInMinutes){
     if( diffInMinutes < 1 ){
-        const minutesLeft = diffInMinutes * -1;
+        let minutesLeft = diffInMinutes * -1;
 
         let className = "btn-success";
 
-        if( minutesLeft < 10 )
+        if( minutesLeft < 5 )
             className = "btn-warning";
+        else if( minutesLeft < 10 )
+            className = "btn-primary";
+            
+        if( minutesLeft > 5 )
+            minutesLeft = minutesLeft - 5;
 
         if( minutesLeft < 1 )
             return simpleDiv(`in less than 1 minute`, className);
