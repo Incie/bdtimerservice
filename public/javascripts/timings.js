@@ -139,7 +139,7 @@ function simpleDiv(text, className){
 function currentStatus(diffInMinutes){
     if( diffInMinutes > 1 )
         return simpleDiv("Last observed race was");
-    else if( diffInMinutes > -5 )
+    else if( diffInMinutes >= -5 )
         return simpleDiv("Registration is currently available and closes", "btn-warning");
     else if( diffInMinutes > -10 )
         return simpleDiv("Registration will be available very soon", "btn-primary");
@@ -153,7 +153,7 @@ function timeSpanInMinutes(diffInMinutes){
 
         let className = "btn-success";
 
-        if( minutesLeft < 5 )
+        if( minutesLeft <= 5 )
             className = "btn-warning";
         else if( minutesLeft < 10 )
             className = "btn-primary";
