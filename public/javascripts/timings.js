@@ -54,7 +54,7 @@ function sendTimingUpdate(){
         region: region,
         serverid: serverid,
         horseClass: horseclass,
-        time: new Date().getTime() + seconds( Number(time) * 60),
+        time: new Date().getTime() + seconds( Number(time) * 60) + 1, //A timer of 1:59 ingame is always shown as 1 minute, so a user inputting time in minutes can be wrong up by up to 1 minute
         // user: elementValue('update-user'),
         // password: elementValue('update-password'),
     };
@@ -129,17 +129,21 @@ function simpleDiv(text, className){
 }
 
 function timeSpanInMinutes(date){
-    const diff = new Date().getTime() - date.getTime();
-    var diffInMinutes = Math.floor((diff / 1000) / 60);
-    //diffInMinutes += 1.0f; //A timer of 1:59 ingame is always shown as 1 minute, so a user inputting time in minutes can be wrong up by up to 1 minute
+    const diffInMilliseconds = new Date().getTime() - date.getTime();
+    let diffInMinutes = Math.floor((diffInMilliseconds / 1000) / 60);
 
     if( diffInMinutes < 1 ){
+        const minutesLeft = diffInMinutes * -1;
+
         let className = "btn-success";
-        if( diffInMinutes > -10 ) className = "btn-warning";
-        if( diffInMinutes > 0 )
+
+        if( minutesLeft < 10 )
+            className = "btn-warning";
+
+        if( minutesLeft < 1 )
             return simpleDiv(`in less than 1 minute`, className);
         else
-            return simpleDiv(`in ${diffInMinutes * -1} minutes`, className);
+            return simpleDiv(`in ${minutesLeft} minutes`, className);
     }
 
     return simpleDiv(diffInMinutes + " minutes ago"); //Removed colour to make it less distracting. An unavailable race should draw no one's attention.
