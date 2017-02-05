@@ -111,7 +111,7 @@ function createHorseClassDiv(horseClass){
         data += `<span style="padding: 3px; border-radius: 4px; margin: 6px 2px;" class="${className}">${i}</span>`;
     }
 
-    return `<div style="margin: 2px;">Class: ${data}</div>`;
+    return `<div style="margin: 2px;">Tier: ${data}</div>`;
 }
 
 function createDiv(type, text, className){
