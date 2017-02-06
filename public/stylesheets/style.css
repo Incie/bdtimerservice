@@ -44,3 +44,9 @@ input {
     padding: 3px;
 }
 
+.radiolabel {
+    border: 1px solid black;
+    border-radius: 4px;
+    background-color: black;
+    color: white;
+}
