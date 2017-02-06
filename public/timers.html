@@ -16,16 +16,15 @@
         <h1>Black Desert Horse Race Application Service</h1>
 
         <div id="bd-app">
-            <label class="btn btn-info radiolabel"><input name="g" type="radio" value="0"> Sup </label>
-            <label class="btn btn-info radiolabel"><input name="g" type="radio" value="0"> Sup0 </label>
             <div>
-                <horse-race :prop="message0"></horse-race>
-                <horse-race :prop="message1"></horse-race>
-                <horse-race  v-for="(n,i) in meow" :prop="meow[n]"></horse-race>
+                <horse-race style="margin: auto; width: 50%;border: 1px solid red; padding: 3px;" v-for="(data,i) in timings" :data="data" :servername="servernames[i]"></horse-race>
             </div>
             <button @click="click">Click</button>
         </div>
 
+
+        <!--<label class="btn btn-info radiolabel"><input name="g" type="radio" value="0"> Sup </label>-->
+        <!--<label class="btn btn-info radiolabel"><input name="g" type="radio" value="0"> Sup0 </label>-->
 
         <!--<div>-->
             <!--<span id="region-eu" class="region">-->

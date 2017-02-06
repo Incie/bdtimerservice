@@ -1,32 +1,34 @@
 Vue.component('horse-race', {
-    props: ['prop'],
-    template: '<div> {{prop}} </div>'
+    props: ['servername', 'data'],
+    template: '<div> <h4>{{servername}}</h4> Tier {{data.horseClass}}, start {{data.startTime}}  reg {{data.registeredTime}} </div>'
 });
-
 
 function initVue() {
     var timingapp = new Vue({
         el: '#bd-app',
         data: {
-            meow: [1, 2, 3, 4, 5, 6, 7],
-            message0: "myaa",
-            message1: "myee",
+            region: "eu",
             servernames: [],
-            timing: {}
+            timings: {}
         },
         methods: {
-            init: function(){
-                console.log("abc");
+            init: function () {
+                this.fetchServerNames();
             },
-            refreshRaceData: function(){
-
+            fetchServerNames: function () {
+                fetch('/servernames')
+                    .then(r => r.json())
+                    .then(jsonResponse => {
+                        this.servernames = jsonResponse.names;
+                        this.refreshData();
+                    });
             },
-            click: function(){
-                for( let i = 0; i < this.meow.length; i += 1 )
-                    Vue.set(this.meow, i, this.meow[i] + 1);
-
-                this.message0 += "0";
-                this.message1 += "0";
+            refreshData: function(){
+                fetch('/data')
+                    .then(r => r.json())
+                    .then(jsonResponse => {
+                        this.timings = jsonResponse[this.region].data;
+                    });
             }
         }
     });
