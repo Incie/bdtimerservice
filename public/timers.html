@@ -11,72 +11,20 @@
     <script src="/javascripts/timingsvue.js"></script>
 </head>
 <body onload="initVue()">
-    <div class="btn-danger" style="text-align:center; font-size: 150%;">Page only support viewing in Google Chrome at the moment</div>
-    <div id="main">
-        <h1>Black Desert Horse Race Application Service</h1>
+<div class="btn-danger" style="text-align:center; font-size: 150%;">Page only support viewing in Google Chrome at the
+    moment
+</div>
+<div id="main">
+    <h1>Black Desert Horse Race Application Service</h1>
 
-        <div id="bd-app">
-            <timing-dialog></timing-dialog>
-            <region-select region="us" :selected-region="region" v-on:new-region="setRegion('us')"></region-select>
-            <region-select region="eu" :selected-region="region" v-on:new-region="setRegion('eu')"></region-select>
-            <div>
-                <horse-race style="margin: auto; width: 50%;border: 1px solid red; padding: 3px;" v-for="(data,i) in timings" :now="now" :data="data" :servername="servernames[i]"></horse-race>
-            </div>
-        </div>
-
-
-        <!--<label class="btn btn-info radiolabel"><input name="g" type="radio" value="0"> Sup </label>-->
-        <!--<label class="btn btn-info radiolabel"><input name="g" type="radio" value="0"> Sup0 </label>-->
-
-        <!--<div>-->
-            <!--<span id="region-eu" class="region">-->
-                <!--<h4>EU</h4>-->
-                <!--<div id="timings-eu"></div>-->
-            <!--</span>-->
-            <!--<span id="region-us" class="region">-->
-                <!--<h4>US</h4>-->
-                <!--<div id="timings-us"></div>-->
-            <!--</span>-->
-        <!--</div>-->
-        <!--<div style="border:1px solid red; border-radius: 3px; margin-top: 150px">-->
-            <!--<h4>Push Update</h4>-->
-            <!--<span style="display: inline-block">-->
-                <!--<div>-->
-                    <!--Region-->
-                    <!--<label class="selector"><input type="radio" name="update-region" value="eu">EU</label>-->
-                    <!--<label class="selector"><input type="radio" name="update-region" value="us">US</label>-->
-                <!--</div>-->
-                <!--&lt;!&ndash;<div>Server </div>&ndash;&gt;-->
-
-                <!--&lt;!&ndash;<div>Region <input id="update-region" type="text" placeholder="eu or us"/></div>&ndash;&gt;-->
-                <!--<div>-->
-                    <!--Channel-->
-                    <!--<label class="selector"><input type="radio" name="update-serverid" value="0">Vel2</label>-->
-                    <!--<label class="selector"><input type="radio" name="update-serverid" value="1">Bal2</label>-->
-                    <!--<label class="selector"><input type="radio" name="update-serverid" value="2">Ser2</label>-->
-                    <!--<label class="selector"><input type="radio" name="update-serverid" value="3">Cal2</label>-->
-                    <!--<label class="selector"><input type="radio" name="update-serverid" value="4">Med2</label>-->
-                    <!--<label class="selector"><input type="radio" name="update-serverid" value="5">Val2</label>-->
-                <!--</div>-->
-                <!--<div>-->
-                    <!--Horse Tier-->
-                    <!--<label class="selector"><input type="radio" name="update-horseclass" value="1">1</label>-->
-                    <!--<label class="selector"><input type="radio" name="update-horseclass" value="2">2</label>-->
-                    <!--<label class="selector"><input type="radio" name="update-horseclass" value="3">3</label>-->
-                    <!--<label class="selector"><input type="radio" name="update-horseclass" value="4">4</label>-->
-                    <!--<label class="selector"><input type="radio" name="update-horseclass" value="5">5</label>-->
-                    <!--<label class="selector"><input type="radio" name="update-horseclass" value="6">6</label>-->
-                    <!--<label class="selector"><input type="radio" name="update-horseclass" value="7">7</label>-->
-                    <!--<label class="selector"><input type="radio" name="update-horseclass" value="8">8</label>-->
-                <!--</div>-->
-                <!--<div>Time <input id="update-time" type="text" style="" placeholder="Number of minutes"/></div>-->
-                <!--<div><button onclick="sendTimingUpdate()">Send</button></div>-->
-            <!--</span>-->
-            <!--<span style="display: inline-block">-->
-                <!--<div>Login <input id="update-user" type="text" placeholder="User"/></div>-->
-                <!--<div>Password <input id="update-password" type="password" placeholder="Password"/></div>-->
-            <!--</span>-->
+    <div id="bd-app">
+        <timing-dialog></timing-dialog>
+        <region-select region="us" :selected-region="region" v-on:new-region="setRegion('us')"></region-select>
+        <region-select region="eu" :selected-region="region" v-on:new-region="setRegion('eu')"></region-select>
+        <div>
+            <horse-race class="horseRace" v-for="(data,i) in timings" :now="now" :data="data" :servername="servernames[i]"></horse-race>
         </div>
     </div>
+</div>
 </body>
 </html>
