@@ -33,13 +33,6 @@ dbModule.getAll = function() {
 };
 
 dbModule.update = function(region, id, time, horseClass){
-    if( id < 0 || id > 5 )
-        return;
-    if( region != 'eu' && region != 'us' )
-        return;
-    if( horseClass < 1 || horseClass > 8 )
-        return;
-
     dbData[region].data[id].startTime = time;
     dbData[region].data[id].horseClass = horseClass;
     dbData[region].data[id].registeredTime = new Date().getTime();
