@@ -1,4 +1,5 @@
 require('./components.js');
+let timingDialog = require('./../../client/timing-dialog.vue');
 
 console.log("loading app");
 
@@ -14,6 +15,9 @@ function initVue() {
             servernames: [],
             timings: {},
             now: new Date().getTime()
+        },
+        components: {
+            'timing-dialog': timingDialog
         },
         methods: {
             init: function () {
