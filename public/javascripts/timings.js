@@ -137,7 +137,7 @@ function simpleDiv(text, className){
 }
 
 function currentStatus(diffInMinutes){
-    if( diffInMinutes > 1 )
+    if( diffInMinutes > 0 )
         return simpleDiv("Last observed race was");
     else if( diffInMinutes >= -5 )
         return simpleDiv("Registration is currently available and closes", "btn-warning");
@@ -148,7 +148,7 @@ function currentStatus(diffInMinutes){
 }
 
 function timeSpanInMinutes(diffInMinutes){
-    if( diffInMinutes < 1 ){
+    if( diffInMinutes < 1 ){ //Get time for upcoming race
         let minutesLeft = diffInMinutes * -1;
 
         let className = "btn-success";
@@ -167,7 +167,32 @@ function timeSpanInMinutes(diffInMinutes){
             return simpleDiv(`in ${minutesLeft} minutes`, className);
     }
 
-    return simpleDiv(diffInMinutes + " minutes ago"); //Removed colour to make it less distracting. An unavailable race should draw no one's attention.
+    //Get time for last race and an estimated time for next race (we assume a full race takes 71 minutes on average)
+    let agoString;
+    if (diffInMinutes > 60 ){ //Show "x hours ago" instead of "x minutes ago"
+        let hours = diffInMinutes / 60;
+        hours = Math.floor(hours);
+        if( hours == 1 )
+            agoString = hours + " hour ago";
+        else
+            agoString = hours + " hours ago";
+    }
+    else
+        agoString = diffInMinutes + " minutes ago";
+    
+    if( diffInMinutes > 600 ) //If it's been longer than 10 hours, an estimate would be too off to matter
+        return simpleDiv(agoString);
+        
+    let nextRaceTime;
+    if( diffInMinutes > 71 ){
+        let races = diffInMinutes / 71;
+        races = Math.floor(races);
+        nextRaceTime = 71 - (diffInMinutes - (races * 71));
+    }
+    else
+        nextRaceTime = 71 - diffInMinutes;
+        
+    return simpleDiv(agoString + " (new race in roughly " + nextRaceTime + "m)"); //Removed colour to make it less distracting. An unavailable race should draw no one's attention.
 }
 
 function formatDate(date){
