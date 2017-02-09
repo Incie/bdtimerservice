@@ -5,6 +5,7 @@ let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
 let db = require('./modules/db');
 
+let apiRouter = require('./modules/api.js');
 
 let app = express();
 
@@ -16,54 +17,7 @@ app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-function getAbsolutePath(relativePath) {
-    return path.join(__dirname, '/public/', relativePath);
-}
-
-const files = {
-    index: getAbsolutePath('timers.html'),
-};
-
-app.get('/', function (req, res) {
-    res.sendFile(files.index);
-});
-
-const serverNames = {
-    names: [
-        "Velia 2",
-        "Balenos 2",
-        "Serendia 2",
-        "Calpheon 2",
-        "Mediah 2",
-        "Valencia 2"
-    ]
-};
-app.get('/servernames', function (req, res) {
-    res.send(serverNames);
-});
-
-app.post('/update', function (req, res) {
-    const payload = req.body;
-
-    if (payload.id < 0 || payload.id > 5)
-        res.send(400, "Invalid serverId: " + payload.id);
-    else if(payload.region !== 'eu' && payload.region !== 'us')
-        res.send(400, "Invalid region: " + payload.region);
-    else if (payload.horseClass < 1 || payload.horseClass > 8)
-        res.send(400, "Invalid horse tier: " + payload.horseClass);
-    else {
-        db.update(payload.region, payload.serverid, Number(payload.time), payload.horseClass);
-        res.send();
-    }
-});
-
-app.get('/data', function (req, res) {
-    res.send(db.getAll())
-});
-
-app.all('*', function (req, res) {
-    res.status(404).send({message: 'The hamster did not find this page in the registry'});
-});
+app.use('/', apiRouter );
 
 const port = (process.env.PORT || 3000);
 app.listen(port, function () {
