@@ -6,6 +6,14 @@ module.exports = {
         path: './public/javascripts/',
         filename: 'timings.bundle.js'
     },
+    module: {
+        loaders: [
+            {
+                test: /\.js$/,
+                loader: 'babel-loader'
+            }
+        ]
+    },
     plugins: [
         new webpack.optimize.UglifyJsPlugin({
             compress: {

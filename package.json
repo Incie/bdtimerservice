@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./app.js",
-	"build": "webpack"
+    "build": "webpack"
   },
   "dependencies": {
     "body-parser": "~1.16.0",
@@ -17,6 +17,9 @@
     "serve-favicon": "~2.3.2"
   },
   "devDependencies": {
+    "babel-core": "^6.22.1",
+    "babel-loader": "^6.2.10",
+    "babel-preset-es2015": "^6.22.0",
     "webpack": "^2.2.1"
   }
 }
