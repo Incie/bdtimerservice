@@ -7,16 +7,34 @@
                 enabled: false,
                 server: {},
                 tier: 1,
-                minutes: undefined
+                minutes: undefined,
+                posX: 0,
+                posY: 0
             }
         },
         components: {
             'radio-button': RadioButtonComponent
         },
+        computed: {
+            positioning: function(){
+                let style = {
+                    right: (window.innerWidth - this.posX) +  'px'
+                };
+
+                if( this.posY > window.innerHeight * 0.5 ){
+                    style['bottom'] = (window.innerHeight - this.posY) + 'px';
+                }
+                else
+                    style['top'] = this.posY + 'px';
+                return style;
+            }
+        },
         created: function () {
             eventBus.$on('update-dialog', data => {
                 this.server = data;
                 this.enabled = true;
+                this.posX = data.posX;
+                this.posY = data.posY;
             });
         },
         methods: {
@@ -25,6 +43,10 @@
             },
             onClose: function () {
                 this.enabled = false;
+            },
+            prevent: function(e) {
+                e.preventDefault();
+                e.stopPropagation();
             },
             secondsToMilliseconds: function(seconds){
                 return 1000 * seconds;
@@ -52,8 +74,7 @@
                 }).catch(() => alert("failed to send"));
             },
             onTier: function(n){
-                this.tierz = n;
-                console.log('onTier', n);
+                this.tier = n;
             }
         }
     };
@@ -74,9 +95,6 @@
         position: absolute;
         border-radius: 4px;
         border: 1px solid black;
-        left: 50%;
-        top: 50%;
-        right: 50%;
         width: 50%;
         min-width: 200px;
         max-width: 400px;
@@ -95,8 +113,8 @@
 </style>
 
 <template>
-    <div v-if="enabled" class="outer-dialog">
-        <div class="inner-dialog bg-primary text-danger">
+    <div v-if="enabled" class="outer-dialog" @click="onClose">
+        <div class="inner-dialog bg-primary text-danger" v-bind:style="positioning" @click="prevent($event)">
             <h4>Update race timing for <strong style="font-size: 140%">{{server.servername}} on {{server.region}}</strong></h4>
             <div style="margin:5px">
                 Minutes until race

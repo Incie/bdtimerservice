@@ -22,17 +22,21 @@
                 hash = 'eu';
             this.setRegion(hash);
             setInterval( () => this.now = new Date().getTime(), 1000 );
-            eventBus.$on('updateTiming', serverName => {
+            eventBus.$on('updateTiming', (serverName, pos) => {
                 eventBus.$emit('update-dialog', {
                     region: this.region,
                     id: this.servernames.indexOf(serverName),
-                    servername: serverName
+                    servername: serverName,
+                    posX: pos.posX,
+                    posY: pos.posY
                 });
             });
 
-            eventBus.$on('refresh-timings', () =>{
+            eventBus.$on('refresh-timings', () => {
                 this.refreshData();
             });
+
+            setInterval(this.refreshData, 15 * 1000);
         },
         components: {
             'timing-dialog': timingDialog,
