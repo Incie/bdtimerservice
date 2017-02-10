@@ -3,28 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>BlackDesertHorseRaceTimings</title>
-    <script src="https://unpkg.com/vue/dist/vue.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <!--<script src="https://unpkg.com/vue@2.1.10/dist/vue.js"></script>-->
+    <script src="https://unpkg.com/vue@2.1.10/dist/vue.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.2/fetch.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="/stylesheets/style.css">
 
-    <script src="/javascripts/timings.js"></script>
-    <script src="/javascripts/timingsvue.js"></script>
+    <script src="/javascripts/timings.bundle.js"></script>
 </head>
-<body onload="initVue()">
-<div class="btn-danger" style="text-align:center; font-size: 150%;">Page only support viewing in Google Chrome at the
-    moment
-</div>
-<div id="main">
-    <h1>Black Desert Horse Race Application Service</h1>
-
-    <div id="bd-app">
-        <timing-dialog></timing-dialog>
-        <region-select region="us" :selected-region="region" v-on:new-region="setRegion('us')"></region-select>
-        <region-select region="eu" :selected-region="region" v-on:new-region="setRegion('eu')"></region-select>
-        <div>
-            <horse-race class="horseRace" v-for="(data,i) in timings" :now="now" :data="data" :servername="servernames[i]"></horse-race>
-        </div>
+<body onload="window.bootstrapTimingsApp()">
+    <div class="btn-danger" style="text-align:center; font-size: 150%;">
+        Page supports viewing in Chrome and Firefox
     </div>
-</div>
+    <div id="main">
+        <h1>Black Desert Horse Race Application Service</h1>
+        <div id="bd-app"></div>
+    </div>
 </body>
 </html>
