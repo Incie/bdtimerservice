@@ -529,6 +529,8 @@ module.exports = {
         onSend: function onSend() {
             var _this2 = this;
 
+            if (this.minutes === undefined) return;
+
             var payload = {
                 region: this.server.region,
                 serverid: this.server.id,
@@ -845,7 +847,13 @@ if (false) {
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "timingRow"
-  }, [_c('h4', [_vm._v(_vm._s(_vm.servername))]), _vm._v(" "), _c('div', [_vm._l((8), function(n) {
+  }, [_c('h4', [_vm._v(_vm._s(_vm.servername))]), _vm._v(" "), _c('div', [_c('horse-tier', {
+    attrs: {
+      "title": "Unknown Tier",
+      "tier": "?",
+      "currentTier": _vm.data.horseClass
+    }
+  }), _vm._v(" "), _vm._l((8), function(n) {
     return _c('horse-tier', {
       attrs: {
         "tier": n,
@@ -920,7 +928,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     attrs: {
       "type": "text",
-      "placeholder": "[0-99]"
+      "placeholder": "[0-60]"
     },
     domProps: {
       "value": _vm._s(_vm.minutes)
@@ -935,7 +943,15 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticStyle: {
       "margin": "5px"
     }
-  }, [_vm._v("\n            Horse-Tier\n            "), _c('div', _vm._l((8), function(t) {
+  }, [_vm._v("\n            Horse-Tier\n            "), _c('div', [_c('radio-button', {
+    attrs: {
+      "value": "?",
+      "groupvalue": _vm.tier
+    },
+    on: {
+      "radioupdate": _vm.radio
+    }
+  }), _vm._v(" "), _vm._l((8), function(t) {
     return _c('span', [_c('radio-button', {
       attrs: {
         "value": t,
@@ -945,7 +961,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "radioupdate": _vm.radio
       }
     })], 1)
-  }))]), _vm._v(" "), _c('div', {
+  })], 2)]), _vm._v(" "), _c('div', {
     staticStyle: {
       "margin": "5px"
     }

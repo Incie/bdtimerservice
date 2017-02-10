@@ -39,6 +39,8 @@ router.post('/update', function (req, res) {
         res.status(400).send("Invalid region: " + payload.region);
     else if (Number(payload.horseClass) < 1 || Number(payload.horseClass) > 8 || (typeof(payload.horseClass) !== "number" && payload.horseClass !== '?') )
         res.status(400).send("Invalid horse tier: " + payload.horseClass);
+    else if( typeof(payload.time) !== "number" || payload.time === null || payload.time === undefined )
+        res.status(400).send("Invalid time");
     else {
         db.update(payload.region, payload.serverid, Number(payload.time), payload.horseClass);
         res.send();
@@ -51,6 +53,7 @@ router.get('/data', function (req, res) {
 
 router.all('*', function (req, res) {
     res.status(404).send({message: 'The hamster did not find this page in the registry'});
+    console.log('404 body', req.body);
 });
 
 module.exports = router;
