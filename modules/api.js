@@ -34,11 +34,11 @@ router.post('/update', function (req, res) {
     const payload = req.body;
 
     if (payload.id < 0 || payload.id > 5)
-        res.send(400, "Invalid serverId: " + payload.id);
+        res.status(400).send("Invalid serverId: " + payload.id);
     else if(payload.region !== 'eu' && payload.region !== 'us')
-        res.send(400, "Invalid region: " + payload.region);
-    else if (payload.horseClass < 1 || payload.horseClass > 8)
-        res.send(400, "Invalid horse tier: " + payload.horseClass);
+        res.status(400).send("Invalid region: " + payload.region);
+    else if (Number(payload.horseClass) < 1 || Number(payload.horseClass) > 8 || (typeof(payload.horseClass) !== "number" && payload.horseClass !== '?') )
+        res.status(400).send("Invalid horse tier: " + payload.horseClass);
     else {
         db.update(payload.region, payload.serverid, Number(payload.time), payload.horseClass);
         res.send();
