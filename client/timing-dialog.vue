@@ -52,6 +52,9 @@
                 return 1000 * seconds;
             },
             onSend: function () {
+                if( this.minutes === undefined )
+                    return;
+
                 const payload = {
                     region: this.server.region,
                     serverid: this.server.id,
@@ -119,12 +122,13 @@
             <div style="margin:5px">
                 Minutes until race
                 <div>
-                    <input style="padding: 4px;" class="minutes" type="text" v-model="minutes" placeholder="[0-99]"><br/>
+                    <input style="padding: 4px;" class="minutes" type="text" v-model="minutes" placeholder="[0-60]"><br/>
                 </div>
             </div>
             <div style="margin:5px">
                 Horse-Tier
                 <div>
+                    <radio-button @radioupdate="radio" value="?" :groupvalue="tier"></radio-button>
                 <span v-for="t in 8">
                     <radio-button @radioupdate="radio" :value="t" :groupvalue="tier"></radio-button>
                 </span>
