@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 
 module.exports = {
-    entry: './client/timingsvue.js',
+    entry: './client/bootstrap-timingsapp.js',
     output: {
         path: './public/javascripts/',
         filename: 'timings.bundle.js'

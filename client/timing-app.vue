@@ -1,10 +1,9 @@
-let timingDialog = require('./timing-dialog.vue');
-let horseRace = require('./horse-race.vue');
-let regionSelect = require('./region-select.vue');
+<script>
+    import * as timingDialog from './timing-dialog.vue';
+    import * as horseRace from './horse-race.vue';
+    import * as regionSelect from './region-select.vue';
 
-
-window.bootstrapTimingsApp = function(){
-    let timingapp = new Vue({
+    module.exports = {
         el: '#bd-app',
         data: {
             region: "eu",
@@ -16,7 +15,24 @@ window.bootstrapTimingsApp = function(){
         created: function(){
             window.eventBus = new Vue();
             console.log("loading app");
-            this.init();
+
+            this.fetchServerNames();
+            let hash = document.location.hash.substr(1, 2);
+            if( hash !== 'eu' && hash !== 'us' )
+                hash = 'eu';
+            this.setRegion(hash);
+            setInterval( () => this.now = new Date().getTime(), 1000 );
+            eventBus.$on('updateTiming', serverName => {
+                eventBus.$emit('update-dialog', {
+                    region: this.region,
+                    id: this.servernames.indexOf(serverName),
+                    servername: serverName
+                });
+            });
+
+            eventBus.$on('refresh-timings', () =>{
+                this.refreshData();
+            });
         },
         components: {
             'timing-dialog': timingDialog,
@@ -24,25 +40,6 @@ window.bootstrapTimingsApp = function(){
             'region-select': regionSelect
         },
         methods: {
-            init: function () {
-                this.fetchServerNames();
-                let hash = document.location.hash.substr(1, 2);
-                if( hash !== 'eu' && hash !== 'us' )
-                    hash = 'eu';
-                this.setRegion(hash);
-                setInterval( () => this.now = new Date().getTime(), 1000 );
-                eventBus.$on('updateTiming', abc => {
-                    eventBus.$emit('update-dialog', {
-                        region: this.region,
-                        id: this.servernames.indexOf(abc),
-                        servername: abc
-                    });
-                });
-
-                eventBus.$on('refresh-timings', () =>{
-                    this.refreshData();
-                });
-            },
             fetchServerNames: function () {
                 fetch('/servernames')
                     .then(r => r.json())
@@ -70,8 +67,18 @@ window.bootstrapTimingsApp = function(){
                     });
             }
         }
-    });
-};
-
-
-
+    }
+</script>
+<template>
+    <span>
+        <timing-dialog></timing-dialog>
+        <div style="margin-bottom: 15px;">
+            <span style="font-size: 150%">Region</span>
+            <region-select region="us" :selected-region="region" v-on:new-region="setRegion('us')"></region-select>
+            <region-select region="eu" :selected-region="region" v-on:new-region="setRegion('eu')"></region-select>
+        </div>
+        <div>
+            <horse-race class="horseRace bg-info" v-for="(data,i) in timings" :now="now" :data="data" :servername="servernames[i]"></horse-race>
+        </div>
+    </span>
+</template>

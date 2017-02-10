@@ -31,8 +31,7 @@
         <div>
             <horse-tier v-for="n in 8" :tier="n" :currentTier="data.horseClass"></horse-tier>
             <time-status :now="now" :start="data.startTime" :registered="data.registeredTime"></time-status>
-            <button style="position:absolute; right: 3px; top:3px; border-radius: 15px;"
-                    class="btn btn-xs btn-info glyphicon glyphicon-cloud-upload" @click="updateTiming"></button>
+            <button style="position:absolute; right: 3px; top:3px; border-radius: 15px;" class="btn btn-xs btn-info glyphicon glyphicon-cloud-upload" @click="updateTiming"></button>
         </div>
     </div>
 </template>

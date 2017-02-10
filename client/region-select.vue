@@ -6,7 +6,7 @@
                 let thisRegion = (this.region === this.selectedRegion);
                 return {
                     'btn': true,
-                    'btn-danger': !thisRegion,
+                    'btn-warning': !thisRegion,
                     'btn-success': thisRegion
                 }
             }

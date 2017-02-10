@@ -1,12 +1,17 @@
 <script>
+    import * as RadioButtonComponent from './radio-button.vue';
+
     module.exports = {
         data: function () {
             return {
                 enabled: false,
                 server: {},
                 tier: 1,
-                time: 0
+                minutes: undefined
             }
+        },
+        components: {
+            'radio-button': RadioButtonComponent
         },
         created: function () {
             eventBus.$on('update-dialog', data => {
@@ -15,18 +20,22 @@
             });
         },
         methods: {
+            radio: function(newTierValue){
+                this.tier = newTierValue;
+            },
             onClose: function () {
                 this.enabled = false;
+            },
+            secondsToMilliseconds: function(seconds){
+                return 1000 * seconds;
             },
             onSend: function () {
                 const payload = {
                     region: this.server.region,
                     serverid: this.server.id,
                     horseClass: this.tier,
-//TODO: Only add the extra 5 minutes if a "registration is available" checkbox is unchecked
-                    time: new Date().getTime() + seconds(Number(this.time) * 60) + 300000,
-// user: elementValue('update-user'),
-// password: elementValue('update-password'),
+                    //TODO: Only add the extra 5 minutes if a "registration is available" checkbox is unchecked
+                    time: new Date().getTime() + this.secondsToMilliseconds( Number(this.minutes) * 60),
                 };
 
                 fetch("/update", {
@@ -41,6 +50,10 @@
                     this.time = 0;
                     this.onClose();
                 }).catch(() => alert("failed to send"));
+            },
+            onTier: function(n){
+                this.tierz = n;
+                console.log('onTier', n);
             }
         }
     };
@@ -72,19 +85,37 @@
     .radio {
         padding-right: 5px;
     }
+
+    .minutes {
+        background-color: black;
+        color: white;
+        border-radius: 5px;
+        border: 1px solid gray;
+    }
 </style>
 
 <template>
     <div v-if="enabled" class="outer-dialog">
-        <div class="inner-dialog bg-primary">
-            <h4>Update race timing for <strong style="font-size: 120%">{{server.servername}} on {{server.region}}</strong></h4>
-            <input class="bg-info text-black" type="text" v-model="time" placeholder="number in minutes"><br/>
-            <span v-for="n in 8">
-                <label><input class="btn btn-info" v-model="tier" type="radio" v-bind:value="n"/>{{n}}</label>
-            </span>
-            <br/>
+        <div class="inner-dialog bg-primary text-danger">
+            <h4>Update race timing for <strong style="font-size: 140%">{{server.servername}} on {{server.region}}</strong></h4>
+            <div style="margin:5px">
+                Minutes until race
+                <div>
+                    <input style="padding: 4px;" class="minutes" type="text" v-model="minutes" placeholder="[0-99]"><br/>
+                </div>
+            </div>
+            <div style="margin:5px">
+                Horse-Tier
+                <div>
+                <span v-for="t in 8">
+                    <radio-button @radioupdate="radio" :value="t" :groupvalue="tier"></radio-button>
+                </span>
+                </div>
+            </div>
+            <div style="margin:5px">
             <button class="btn btn-success btn-sm" @click="onSend">Send</button>
             <button class="btn btn-danger btn-sm" @click="onClose">Close</button>
+            </div>
         </div>
     </div>
 </template>

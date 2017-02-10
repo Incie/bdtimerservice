@@ -18,7 +18,7 @@ input {
 
 .timingRow {
     border-radius: 15px;
-    background-color: #ddd;
+    /*background-color: #ddd;*/
     padding: 5px;
     margin: 2px;
     width: 100%;
@@ -60,7 +60,6 @@ input {
     .horseRace {
         margin: auto;
         width: 100%;
-        border: 1px solid red;
         padding: 3px;
     }
 }
@@ -78,7 +77,6 @@ input {
     .horseRace {
         margin: auto;
         width: 50%;
-        border: 1px solid red;
         padding: 3px;
     }
 }
