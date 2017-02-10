@@ -77,7 +77,7 @@
 <template>
     <div v-if="enabled" class="outer-dialog">
         <div class="inner-dialog bg-primary">
-            <h4>Update race timing for <strong>{{server.servername}} on {{server.region}}</strong></h4>
+            <h4>Update race timing for <strong style="font-size: 120%">{{server.servername}} on {{server.region}}</strong></h4>
             <input class="bg-info text-black" type="text" v-model="time" placeholder="number in minutes"><br/>
             <span v-for="n in 8">
                 <label><input class="btn btn-info" v-model="tier" type="radio" v-bind:value="n"/>{{n}}</label>

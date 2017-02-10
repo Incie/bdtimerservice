@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 
 module.exports = {
-    entry: './public/javascripts/timingsvue.js',
+    entry: './client/timingsvue.js',
     output: {
         path: './public/javascripts/',
         filename: 'timings.bundle.js'
@@ -10,7 +10,7 @@ module.exports = {
         loaders: [
             {
                 test: /\.vue$/,
-                loader: 'vue-loader'
+                loader: 'vue-loader',
             },
             {
                 test: /\.js$/,

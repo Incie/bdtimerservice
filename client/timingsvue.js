@@ -1,12 +1,9 @@
-require('./components.js');
-let timingDialog = require('./../../client/timing-dialog.vue');
+let timingDialog = require('./timing-dialog.vue');
+let horseRace = require('./horse-race.vue');
+let regionSelect = require('./region-select.vue');
 
-console.log("loading app");
 
-window.eventBus = new Vue();
-window.initAppz = initVue;
-
-function initVue() {
+window.bootstrapTimingsApp = function(){
     let timingapp = new Vue({
         el: '#bd-app',
         data: {
@@ -16,8 +13,15 @@ function initVue() {
             timings: {},
             now: new Date().getTime()
         },
+        created: function(){
+            window.eventBus = new Vue();
+            console.log("loading app");
+            this.init();
+        },
         components: {
-            'timing-dialog': timingDialog
+            'timing-dialog': timingDialog,
+            'horse-race': horseRace,
+            'region-select': regionSelect
         },
         methods: {
             init: function () {
@@ -67,6 +71,7 @@ function initVue() {
             }
         }
     });
+};
 
-    timingapp.init();
-}
+
+
