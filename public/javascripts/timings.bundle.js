@@ -231,6 +231,12 @@ module.exports = {
         'horse-tier': HorseTierComponent,
         'time-status': TimeStatusComponent
     },
+    computed: {
+        submitAllowed: function submitAllowed() {
+            console.log("submitAllowed", window.submitAllowed);
+            return window.submitAllowed;
+        }
+    },
     props: ['servername', 'data', 'now'],
     methods: {
         updateTiming: function updateTiming(e) {
@@ -339,13 +345,12 @@ module.exports = {
         minutesToHours: function minutesToHours(minutes) {
             return Math.floor(Math.abs(minutes / 60));
         },
-
         parseTime: function parseTime(minutes) {
             if (minutes < -60) return 'Last observed race was over ' + this.minutesToHours(minutes) + ' hours ago';
-            if (minutes < -5) return 'Last observed race was ' + minutes + ' minutes ago';
-            if (minutes > -5 && minutes < 0) return "registration active";
+            if (minutes < -5) return 'Last observed race was ' + Math.abs(minutes) + ' minutes ago';
+            if (minutes > -5 && minutes < 0) return "Registration active";
 
-            return 'next race in ' + minutes + ' minutes';
+            return 'Next race in ' + minutes + ' minutes';
         }
     },
     computed: {
@@ -359,7 +364,8 @@ module.exports = {
         },
         cssClass: function cssClass() {
             return {
-                'btn-success': this.timeLeft > 0
+                'btn-success': this.timeLeftInMinutes >= 0,
+                'btn-warning': this.timeLeftInMinutes >= -5 && this.timeLeftInMinutes < 0
             };
         }
     }
@@ -402,7 +408,15 @@ module.exports = {
         console.log("loading app");
 
         this.fetchServerNames();
-        var hash = document.location.hash.substr(1, 2);
+        var hash = document.location.hash;
+        hash = hash.substr(1, hash.length - 1);
+
+        if (hash.includes('&submitallowed')) {
+            console.log("submitAllowed");
+            window.submitAllowed = true;
+            hash.replace('&submitallowed', '');
+        }
+
         if (hash !== 'eu' && hash !== 'us') hash = 'eu';
         this.setRegion(hash);
         setInterval(function () {
@@ -491,6 +505,10 @@ module.exports = {
         'radio-button': RadioButtonComponent
     },
     computed: {
+        isEnabled: function isEnabled() {
+            console.log("submitAllowed", window.submitAllowed);
+            return this.enabled && window.submitAllowed;
+        },
         positioning: function positioning() {
             var style = {
                 right: window.innerWidth - this.posX + 'px'
@@ -866,7 +884,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "start": _vm.data.startTime,
       "registered": _vm.data.registeredTime
     }
-  }), _vm._v(" "), _c('button', {
+  }), _vm._v(" "), (_vm.submitAllowed) ? _c('button', {
     staticClass: "btn btn-xs btn-info glyphicon glyphicon-cloud-upload",
     staticStyle: {
       "position": "absolute",
@@ -879,7 +897,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.updateTiming($event)
       }
     }
-  })], 2)])
+  }) : _vm._e()], 2)])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -894,7 +912,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return (_vm.enabled) ? _c('div', {
+  return (_vm.isEnabled) ? _c('div', {
     staticClass: "outer-dialog",
     on: {
       "click": _vm.onClose
@@ -1082,6 +1100,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   return _c('div', {
     class: _vm.cssClass,
     staticStyle: {
+      "border-radius": "20px",
+      "margin": "6px auto",
+      "padding": "2px",
+      "left": "5%",
+      "width": "90%",
       "font-size": "120%"
     }
   }, [_vm._v("\n    " + _vm._s(this.timeLeft) + "\n")])

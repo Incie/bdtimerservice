@@ -16,6 +16,9 @@
             'radio-button': RadioButtonComponent
         },
         computed: {
+            isEnabled: function(){
+                return this.enabled && window.submitAllowed;
+            },
             positioning: function(){
                 let style = {
                     right: (window.innerWidth - this.posX) +  'px'
@@ -116,7 +119,7 @@
 </style>
 
 <template>
-    <div v-if="enabled" class="outer-dialog" @click="onClose">
+    <div v-if="isEnabled" class="outer-dialog" @click="onClose">
         <div class="inner-dialog bg-primary text-danger" v-bind:style="positioning" @click="prevent($event)">
             <h4>Update race timing for <strong style="font-size: 140%">{{server.servername}} on {{server.region}}</strong></h4>
             <div style="margin:5px">

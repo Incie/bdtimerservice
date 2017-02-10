@@ -17,7 +17,15 @@
             console.log("loading app");
 
             this.fetchServerNames();
-            let hash = document.location.hash.substr(1, 2);
+            let hash = document.location.hash;
+            hash = hash.substr(1, hash.length-1);
+
+            if( hash.includes('&submitallowed') ){
+                console.log("submitAllowed");
+                window.submitAllowed = true;
+                hash.replace('&submitallowed', '');
+            }
+
             if( hash !== 'eu' && hash !== 'us' )
                 hash = 'eu';
             this.setRegion(hash);
