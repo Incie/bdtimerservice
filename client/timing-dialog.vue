@@ -133,7 +133,7 @@
             <div style="margin:5px">
                 Minutes until race
                 <div>
-                    <label @click="toggleRegister" style="border-radius: 5px; padding: 2px;" class="btn-primary">Registration Available?<input v-model="registrationAvailable" type="checkbox"></label>
+                    <label @click="toggleRegister" style="border-radius: 5px; padding: 2px;" class="btn-primary">Registration Available?<input @click="toggleRegister" v-model="registrationAvailable" type="checkbox"></label>
                 </div>
                 <div>
                     <input style="padding: 4px;" class="minutes" type="text" v-model="minutes" placeholder="[0-60]"><br/>
