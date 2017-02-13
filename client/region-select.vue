@@ -8,7 +8,7 @@
                     'btn': true,
                     'btn-warning': !thisRegion,
                     'btn-success': thisRegion
-                }
+                };
             }
         },
         methods: {
@@ -19,7 +19,7 @@
                 this.$emit('new-region');
             }
         }
-    }
+    };
 </script>
 
 <template>

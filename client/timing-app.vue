@@ -2,6 +2,7 @@
     import * as timingDialog from './timing-dialog.vue';
     import * as horseRace from './horse-race.vue';
     import * as regionSelect from './region-select.vue';
+    import * as K from './../node_modules/konami-js/index';
 
     module.exports = {
         el: '#bd-app',
@@ -13,16 +14,15 @@
             timings: {},
             now: new Date().getTime()
         },
-        created: function(){
-            window.eventBus = new Vue();
-            console.log("loading app");
-
+        created: function () {
             this.fetchServerNames();
             this.handleHash();
 
+            new K.default( () => this.submitAllowed = true );
+
             window.onhashchange = this.handleHash;
 
-            setInterval( this.updateTime, 1000 );
+            setInterval(this.updateTime, 1000);
 
             window.eventBus.$on('updateTiming', (serverName, pos) => {
                 window.eventBus.$emit('update-dialog', {
@@ -34,7 +34,7 @@
                 });
             });
 
-            eventBus.$on('refresh-timings', () => {
+            window.eventBus.$on('refresh-timings', () => {
                 this.refreshData();
             });
 
@@ -46,22 +46,20 @@
             'region-select': regionSelect
         },
         methods: {
-            handleHash: function(){
-                console.log('handleHash');
+            handleHash: function () {
                 let hash = document.location.hash;
-                hash = hash.substr(1, hash.length-1);
+                hash = hash.substr(1, hash.length - 1);
 
-                if( hash.includes('&submitallowed') ){
-                    console.log("submitAllowed");
+                if (hash.includes('&submitallowed')) {
                     this.submitAllowed = true;
                     hash.replace('&submitallowed', '');
                 }
 
-                if( hash !== 'eu' && hash !== 'us' )
+                if (hash !== 'eu' && hash !== 'us')
                     hash = 'eu';
                 this.setRegion(hash);
             },
-            updateTime: function(){
+            updateTime: function () {
                 this.now = new Date().getTime();
             },
             fetchServerNames: function () {
@@ -79,7 +77,7 @@
                 this.updateTimings();
             },
             updateTimings: function () {
-                if( this.allRegions[this.region] === undefined ) return;
+                if (this.allRegions[this.region] === undefined) return;
                 this.timings = this.allRegions[this.region].data;
             },
             refreshData: function () {
@@ -91,7 +89,7 @@
                     });
             }
         }
-    }
+    };
 </script>
 <template>
     <span>
@@ -102,7 +100,8 @@
             <region-select region="eu" :selected-region="region" v-on:new-region="setRegion('eu')"></region-select>
         </div>
         <div>
-            <horse-race class="horseRace bg-info" v-for="(data,i) in timings" :now="now" :data="data" :submit-allowed="submitAllowed" :servername="servernames[i]"></horse-race>
+            <horse-race class="horseRace bg-info" v-for="(data,i) in timings" :now="now" :data="data"
+                        :submit-allowed="submitAllowed" :servername="servernames[i]"></horse-race>
         </div>
     </span>
 </template>

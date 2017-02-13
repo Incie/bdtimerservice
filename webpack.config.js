@@ -6,8 +6,23 @@ module.exports = {
         path: './public/javascripts/',
         filename: 'timings.bundle.js'
     },
+    // eslint: {
+    //     configFile: '.eslintrc.json'
+    // },
     module: {
         loaders: [
+            {
+                enforce: 'pre',
+                test: /.vue$/,
+                loader: 'eslint-loader',
+                exclude: /node_modules/
+            },
+            // {
+            //     enforce: 'pre',
+            //     test: /\.js$/,
+            //     loader: 'eslint-loader',
+            //     exclude: './client/bootstrap-timingsapp.js'
+            // },
             {
                 test: /\.vue$/,
                 loader: 'vue-loader',

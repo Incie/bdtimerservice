@@ -9,7 +9,7 @@
                     'btn-primary': !condition,
                     'btn-success': condition,
                     'horse-tier': true
-                }
+                };
             }
         }
     };

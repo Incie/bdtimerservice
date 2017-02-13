@@ -13,13 +13,13 @@
             }
         },
         props: ['servername', 'data', 'now', 'submitAllowed'],
-            methods: {
+        methods: {
             updateTiming: function (e) {
                 let pos = {posX: e.clientX, posY: e.clientY};
-                eventBus.$emit('updateTiming', this.servername, pos);
+                window.eventBus.$emit('updateTiming', this.servername, pos);
             }
         }
-    }
+    };
 </script>
 
 <template>

@@ -11,7 +11,7 @@
                 minutes: undefined,
                 posX: 0,
                 posY: 0
-            }
+            };
         },
         components: {
             'radio-button': RadioButtonComponent
@@ -34,7 +34,7 @@
             }
         },
         created: function () {
-            eventBus.$on('update-dialog', data => {
+            window.eventBus.$on('update-dialog', data => {
                 this.server = data;
                 this.enabled = true;
                 this.posX = data.posX;
@@ -75,7 +75,7 @@
                     method: "POST",
                     body: JSON.stringify(payload)
                 }).then(() => {
-                    eventBus.$emit('refresh-timings');
+                    window.eventBus.$emit('refresh-timings');
                     this.time = 0;
                     this.onClose();
                 }).catch(() => alert("failed to send"));

@@ -4,7 +4,7 @@
         data: function () {
             return {
                 timeLeftInMinutes: 0
-            }
+            };
         },
         methods: {
             minutesToHours: function (minutes) {
@@ -49,10 +49,10 @@
                 return {
                     'btn-success': (this.timeLeftInMinutes >= 0),
                     'btn-warning': (this.timeLeftInMinutes >= -5 && this.timeLeftInMinutes < 0)
-                }
+                };
             }
         }
-    }
+    };
 </script>
 <template>
     <div v-bind:class="cssClass" style="border-radius: 20px; margin: 6px auto; padding: 2px; left: 5%; width: 90%; font-size: 120%">
