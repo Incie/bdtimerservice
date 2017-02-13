@@ -52,7 +52,7 @@
 
                 if (hash.includes('&submitallowed')) {
                     this.submitAllowed = true;
-                    hash.replace('&submitallowed', '');
+                    hash = hash.replace('&submitallowed', '');
                 }
 
                 if (hash !== 'eu' && hash !== 'us')
