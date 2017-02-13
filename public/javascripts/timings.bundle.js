@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 27);
+/******/ 	return __webpack_require__(__webpack_require__.s = 37);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -125,15 +125,15 @@ module.exports = function normalizeComponent (
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(8),
+  __webpack_require__(18),
   /* template */
-  __webpack_require__(23),
+  __webpack_require__(34),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Projects\\bdtimerservice\\client\\timing-app.vue"
+Component.options.__file = "F:\\Projects\\BlackDesertHorseTiming\\client\\timing-app.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] timing-app.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -144,9 +144,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-d5b6ff9a", Component.options)
+    hotAPI.createRecord("data-v-d7d1e118", Component.options)
   } else {
-    hotAPI.reload("data-v-d5b6ff9a", Component.options)
+    hotAPI.reload("data-v-d7d1e118", Component.options)
   }
 })()}
 
@@ -216,11 +216,960 @@ module.exports = function () {
 "use strict";
 
 
-var _horseTier = __webpack_require__(13);
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+function EventEmitter() {
+  this._events = this._events || {};
+  this._maxListeners = this._maxListeners || undefined;
+}
+module.exports = EventEmitter;
+
+// Backwards-compat with node 0.10.x
+EventEmitter.EventEmitter = EventEmitter;
+
+EventEmitter.prototype._events = undefined;
+EventEmitter.prototype._maxListeners = undefined;
+
+// By default EventEmitters will print a warning if more than 10 listeners are
+// added to it. This is a useful default which helps finding memory leaks.
+EventEmitter.defaultMaxListeners = 10;
+
+// Obviously not all Emitters should be limited to 10. This function allows
+// that to be increased. Set to zero for unlimited.
+EventEmitter.prototype.setMaxListeners = function (n) {
+  if (!isNumber(n) || n < 0 || isNaN(n)) throw TypeError('n must be a positive number');
+  this._maxListeners = n;
+  return this;
+};
+
+EventEmitter.prototype.emit = function (type) {
+  var er, handler, len, args, i, listeners;
+
+  if (!this._events) this._events = {};
+
+  // If there is no 'error' event listener then throw.
+  if (type === 'error') {
+    if (!this._events.error || isObject(this._events.error) && !this._events.error.length) {
+      er = arguments[1];
+      if (er instanceof Error) {
+        throw er; // Unhandled 'error' event
+      } else {
+        // At least give some kind of context to the user
+        var err = new Error('Uncaught, unspecified "error" event. (' + er + ')');
+        err.context = er;
+        throw err;
+      }
+    }
+  }
+
+  handler = this._events[type];
+
+  if (isUndefined(handler)) return false;
+
+  if (isFunction(handler)) {
+    switch (arguments.length) {
+      // fast cases
+      case 1:
+        handler.call(this);
+        break;
+      case 2:
+        handler.call(this, arguments[1]);
+        break;
+      case 3:
+        handler.call(this, arguments[1], arguments[2]);
+        break;
+      // slower
+      default:
+        args = Array.prototype.slice.call(arguments, 1);
+        handler.apply(this, args);
+    }
+  } else if (isObject(handler)) {
+    args = Array.prototype.slice.call(arguments, 1);
+    listeners = handler.slice();
+    len = listeners.length;
+    for (i = 0; i < len; i++) {
+      listeners[i].apply(this, args);
+    }
+  }
+
+  return true;
+};
+
+EventEmitter.prototype.addListener = function (type, listener) {
+  var m;
+
+  if (!isFunction(listener)) throw TypeError('listener must be a function');
+
+  if (!this._events) this._events = {};
+
+  // To avoid recursion in the case that type === "newListener"! Before
+  // adding it to the listeners, first emit "newListener".
+  if (this._events.newListener) this.emit('newListener', type, isFunction(listener.listener) ? listener.listener : listener);
+
+  if (!this._events[type])
+    // Optimize the case of one listener. Don't need the extra array object.
+    this._events[type] = listener;else if (isObject(this._events[type]))
+    // If we've already got an array, just append.
+    this._events[type].push(listener);else
+    // Adding the second element, need to change to array.
+    this._events[type] = [this._events[type], listener];
+
+  // Check for listener leak
+  if (isObject(this._events[type]) && !this._events[type].warned) {
+    if (!isUndefined(this._maxListeners)) {
+      m = this._maxListeners;
+    } else {
+      m = EventEmitter.defaultMaxListeners;
+    }
+
+    if (m && m > 0 && this._events[type].length > m) {
+      this._events[type].warned = true;
+      console.error('(node) warning: possible EventEmitter memory ' + 'leak detected. %d listeners added. ' + 'Use emitter.setMaxListeners() to increase limit.', this._events[type].length);
+      if (typeof console.trace === 'function') {
+        // not supported in IE 10
+        console.trace();
+      }
+    }
+  }
+
+  return this;
+};
+
+EventEmitter.prototype.on = EventEmitter.prototype.addListener;
+
+EventEmitter.prototype.once = function (type, listener) {
+  if (!isFunction(listener)) throw TypeError('listener must be a function');
+
+  var fired = false;
+
+  function g() {
+    this.removeListener(type, g);
+
+    if (!fired) {
+      fired = true;
+      listener.apply(this, arguments);
+    }
+  }
+
+  g.listener = listener;
+  this.on(type, g);
+
+  return this;
+};
+
+// emits a 'removeListener' event iff the listener was removed
+EventEmitter.prototype.removeListener = function (type, listener) {
+  var list, position, length, i;
+
+  if (!isFunction(listener)) throw TypeError('listener must be a function');
+
+  if (!this._events || !this._events[type]) return this;
+
+  list = this._events[type];
+  length = list.length;
+  position = -1;
+
+  if (list === listener || isFunction(list.listener) && list.listener === listener) {
+    delete this._events[type];
+    if (this._events.removeListener) this.emit('removeListener', type, listener);
+  } else if (isObject(list)) {
+    for (i = length; i-- > 0;) {
+      if (list[i] === listener || list[i].listener && list[i].listener === listener) {
+        position = i;
+        break;
+      }
+    }
+
+    if (position < 0) return this;
+
+    if (list.length === 1) {
+      list.length = 0;
+      delete this._events[type];
+    } else {
+      list.splice(position, 1);
+    }
+
+    if (this._events.removeListener) this.emit('removeListener', type, listener);
+  }
+
+  return this;
+};
+
+EventEmitter.prototype.removeAllListeners = function (type) {
+  var key, listeners;
+
+  if (!this._events) return this;
+
+  // not listening for removeListener, no need to emit
+  if (!this._events.removeListener) {
+    if (arguments.length === 0) this._events = {};else if (this._events[type]) delete this._events[type];
+    return this;
+  }
+
+  // emit removeListener for all listeners on all events
+  if (arguments.length === 0) {
+    for (key in this._events) {
+      if (key === 'removeListener') continue;
+      this.removeAllListeners(key);
+    }
+    this.removeAllListeners('removeListener');
+    this._events = {};
+    return this;
+  }
+
+  listeners = this._events[type];
+
+  if (isFunction(listeners)) {
+    this.removeListener(type, listeners);
+  } else if (listeners) {
+    // LIFO order
+    while (listeners.length) {
+      this.removeListener(type, listeners[listeners.length - 1]);
+    }
+  }
+  delete this._events[type];
+
+  return this;
+};
+
+EventEmitter.prototype.listeners = function (type) {
+  var ret;
+  if (!this._events || !this._events[type]) ret = [];else if (isFunction(this._events[type])) ret = [this._events[type]];else ret = this._events[type].slice();
+  return ret;
+};
+
+EventEmitter.prototype.listenerCount = function (type) {
+  if (this._events) {
+    var evlistener = this._events[type];
+
+    if (isFunction(evlistener)) return 1;else if (evlistener) return evlistener.length;
+  }
+  return 0;
+};
+
+EventEmitter.listenerCount = function (emitter, type) {
+  return emitter.listenerCount(type);
+};
+
+function isFunction(arg) {
+  return typeof arg === 'function';
+}
+
+function isNumber(arg) {
+  return typeof arg === 'number';
+}
+
+function isObject(arg) {
+  return (typeof arg === 'undefined' ? 'undefined' : _typeof(arg)) === 'object' && arg !== null;
+}
+
+function isUndefined(arg) {
+  return arg === void 0;
+}
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var interact = __webpack_require__(5),
+    EventEmitter = __webpack_require__(3).EventEmitter;
+
+function GestureDetector(target) {
+    this.target = target || document;
+
+    interact.on('start', this.target, this.__boundStart = this._start.bind(this));
+
+    interact.on('drag', this.target, this.__boundStart = this._drag.bind(this));
+
+    interact.on('end', this.target, this.__boundEnd = this._end.bind(this));
+
+    this.gestures = [];
+}
+GestureDetector.prototype = Object.create(EventEmitter.prototype);
+GestureDetector.prototype.constructor = GestureDetector;
+GestureDetector.prototype._start = function (interaction) {
+    interaction.points = [];
+};
+GestureDetector.prototype._drag = function (interaction) {
+    interaction.points.push({
+        x: interaction.pageX,
+        y: interaction.pageY
+    });
+};
+GestureDetector.prototype._end = function (interaction) {
+    var detector = this;
+    this.gestures.forEach(function (gesture) {
+        var gestureName = gesture.call(this, interaction.points);
+        if (gestureName) {
+            detector.emit('gesture', {
+                name: gestureName,
+                points: interaction.points
+            });
+        }
+    });
+};
+GestureDetector.destroy = function () {
+    interact.off('start', this.target, this.__boundStart);
+
+    interact.on('end', this.target, this.__boundEnd);
+};
+
+module.exports = GestureDetector;
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var interactions = [],
+    minMoveDistance = 5,
+    interact,
+    maximumMovesToPersist = 1000,
+    // Should be plenty..
+propertiesToCopy = 'target,pageX,pageY,clientX,clientY,offsetX,offsetY,screenX,screenY,shiftKey,x,y'.split(','); // Stuff that will be on every interaction.
+
+function Interact() {
+    this._elements = [];
+}
+Interact.prototype.on = function (eventName, target, callback) {
+    if (!target) {
+        return;
+    }
+    target._interactEvents = target._interactEvents || {};
+    target._interactEvents[eventName] = target._interactEvents[eventName] || [];
+    target._interactEvents[eventName].push({
+        callback: callback,
+        interact: this
+    });
+
+    return this;
+};
+Interact.prototype.emit = function (eventName, target, event, interaction) {
+    if (!target) {
+        return;
+    }
+
+    var interact = this,
+        currentTarget = target;
+
+    interaction.originalEvent = event;
+    interaction.preventDefault = function () {
+        event.preventDefault();
+    };
+    interaction.stopPropagation = function () {
+        event.stopPropagation();
+    };
+
+    while (currentTarget) {
+        currentTarget._interactEvents && currentTarget._interactEvents[eventName] && currentTarget._interactEvents[eventName].forEach(function (listenerInfo) {
+            if (listenerInfo.interact === interact) {
+                listenerInfo.callback.call(interaction, interaction);
+            }
+        });
+        currentTarget = currentTarget.parentNode;
+    }
+
+    return this;
+};
+Interact.prototype.off = Interact.prototype.removeListener = function (eventName, target, callback) {
+    if (!target || !target._interactEvents || !target._interactEvents[eventName]) {
+        return;
+    }
+    var interactListeners = target._interactEvents[eventName],
+        listenerInfo;
+    for (var i = 0; i < interactListeners.length; i++) {
+        listenerInfo = interactListeners[i];
+        if (listenerInfo.interact === interact && listenerInfo.callback === callback) {
+            interactListeners.splice(i, 1);
+            i--;
+        }
+    }
+
+    return this;
+};
+interact = new Interact();
+
+// For some reason touch browsers never change the event target during a touch.
+// This is, lets face it, fucking stupid.
+function getActualTarget() {
+    var scrollX = window.scrollX,
+        scrollY = window.scrollY;
+
+    // IE is stupid and doesn't support scrollX/Y
+    if (scrollX === undefined) {
+        scrollX = document.body.scrollLeft;
+        scrollY = document.body.scrollTop;
+    }
+
+    return document.elementFromPoint(this.pageX - window.scrollX, this.pageY - window.scrollY);
+}
+
+function _getMoveDistance(x1, y1, x2, y2) {
+    var adj = Math.abs(x1 - x2),
+        opp = Math.abs(y1 - y2);
+
+    return Math.sqrt(Math.pow(adj, 2) + Math.pow(opp, 2));
+}
+
+function destroyInteraction(interaction) {
+    for (var i = 0; i < interactions.length; i++) {
+        if (interactions[i].identifier === interaction.identifier) {
+            interactions.splice(i, 1);
+        }
+    }
+}
+
+function getInteraction(identifier) {
+    for (var i = 0; i < interactions.length; i++) {
+        if (interactions[i].identifier === identifier) {
+            return interactions[i];
+        }
+    }
+}
+
+function setInheritedData(interaction, data) {
+    for (var i = 0; i < propertiesToCopy.length; i++) {
+        interaction[propertiesToCopy[i]] = data[propertiesToCopy[i]];
+    }
+}
+
+function Interaction(event, interactionInfo) {
+    // If there is no event (eg: desktop) just make the identifier undefined
+    if (!event) {
+        event = {};
+    }
+    // If there is no extra info about the interaction (eg: desktop) just use the event itself
+    if (!interactionInfo) {
+        interactionInfo = event;
+    }
+
+    // If there is another interaction with the same ID, something went wrong.
+    // KILL IT WITH FIRE!
+    var oldInteraction = getInteraction(interactionInfo.identifier);
+    oldInteraction && oldInteraction.destroy();
+
+    this.identifier = interactionInfo.identifier;
+
+    this.moves = [];
+
+    interactions.push(this);
+}
+
+Interaction.prototype = {
+    constructor: Interaction,
+    getActualTarget: getActualTarget,
+    destroy: function destroy() {
+        interact.on('destroy', this.target, this, this);
+        destroyInteraction(this);
+    },
+    start: function start(event, interactionInfo) {
+        // If there is no extra info about the interaction (eg: desktop) just use the event itself
+        if (!interactionInfo) {
+            interactionInfo = event;
+        }
+
+        var lastStart = {
+            time: new Date()
+        };
+        setInheritedData(lastStart, interactionInfo);
+        this.lastStart = lastStart;
+
+        setInheritedData(this, interactionInfo);
+
+        interact.emit('start', event.target, event, this);
+        return this;
+    },
+    move: function move(event, interactionInfo) {
+        // If there is no extra info about the interaction (eg: desktop) just use the event itself
+        if (!interactionInfo) {
+            interactionInfo = event;
+        }
+
+        var currentTouch = {
+            time: new Date()
+        };
+
+        setInheritedData(currentTouch, interactionInfo);
+
+        // Update the interaction
+        setInheritedData(this, interactionInfo);
+
+        this.moves.push(currentTouch);
+
+        // Memory saver, culls any moves that are over the maximum to keep.
+        this.moves = this.moves.slice(-maximumMovesToPersist);
+
+        var lastMove = this.moves[this.moves.length - 2];
+        lastMove && (currentTouch.angle = Math.atan2(currentTouch.pageY - lastMove.pageY, currentTouch.pageX - lastMove.pageX) * 180 / Math.PI);
+        this.angle = currentTouch.angle || 0;
+
+        interact.emit('move', event.target, event, this);
+        return this;
+    },
+    drag: function drag(event, interactionInfo) {
+        // If there is no extra info about the interaction (eg: desktop) just use the event itself
+        if (!interactionInfo) {
+            interactionInfo = event;
+        }
+
+        var currentTouch = {
+            time: new Date(),
+            isDrag: true
+        };
+
+        setInheritedData(currentTouch, interactionInfo);
+
+        // Update the interaction
+        setInheritedData(this, interactionInfo);
+
+        if (!this.moves) {
+            this.moves = [];
+        }
+
+        this.moves.push(currentTouch);
+
+        // Memory saver, culls any moves that are over the maximum to keep.
+        this.moves = this.moves.slice(-maximumMovesToPersist);
+
+        if (!this.dragStarted && _getMoveDistance(this.lastStart.pageX, this.lastStart.pageY, currentTouch.pageX, currentTouch.pageY) > minMoveDistance) {
+            this.dragStarted = true;
+        }
+
+        var lastDrag = this.moves[this.moves.length - 2] || this.lastStart;
+        lastDrag && (currentTouch.angle = Math.atan2(currentTouch.pageY - lastDrag.pageY, currentTouch.pageX - lastDrag.pageX) * 180 / Math.PI);
+        this.angle = currentTouch.angle || 0;
+
+        if (this.dragStarted) {
+            interact.emit('drag', event.target, event, this);
+        }
+        return this;
+    },
+    end: function end(event, interactionInfo) {
+        if (!interactionInfo) {
+            interactionInfo = event;
+        }
+
+        // Update the interaction
+        setInheritedData(this, interactionInfo);
+
+        interact.emit('end', event.target, event, this);
+
+        return this;
+    },
+    cancel: function cancel(event, interactionInfo) {
+        if (!interactionInfo) {
+            interactionInfo = event;
+        }
+
+        // Update the interaction
+        setInheritedData(this, interactionInfo);
+
+        interact.emit('cancel', event.target, event, this);
+
+        return this;
+    },
+    getMoveDistance: function getMoveDistance() {
+        if (this.moves.length > 1) {
+            var current = this.moves[this.moves.length - 1],
+                previous = this.moves[this.moves.length - 2];
+
+            return _getMoveDistance(current.pageX, current.pageY, previous.pageX, previous.pageY);
+        }
+    },
+    getMoveDelta: function getMoveDelta() {
+        if (this.moves.length > 1) {
+            var current = this.moves[this.moves.length - 1],
+                previous = this.moves[this.moves.length - 2];
+
+            return {
+                x: current.pageX - previous.pageX,
+                y: current.pageY - previous.pageY
+            };
+        }
+    },
+    getSpeed: function getSpeed() {
+        if (this.moves.length > 1) {
+            var current = this.moves[this.moves.length - 1],
+                previous = this.moves[this.moves.length - 2];
+
+            return this.getMoveDistance() / (current.time - previous.time);
+        }
+        return 0;
+    },
+    getCurrentAngle: function getCurrentAngle(blend) {
+        var currentPosition,
+            lastAngle,
+            i = this.moves.length - 1,
+            angle,
+            firstAngle,
+            angles = [],
+            blendSteps = 20 / (this.getSpeed() * 2 + 1),
+            stepsUsed = 0;
+
+        if (this.moves && this.moves.length) {
+
+            currentPosition = this.moves[i];
+            angle = firstAngle = currentPosition.angle;
+
+            if (blend && this.moves.length > 1) {
+                while (--i > 0 && this.moves.length - i < blendSteps) {
+                    lastAngle = this.moves[i].angle;
+                    if (Math.abs(lastAngle - firstAngle) > 180) {
+                        angle -= lastAngle;
+                    } else {
+                        angle += lastAngle;
+                    }
+                    stepsUsed++;
+                }
+                angle = angle / stepsUsed;
+            }
+        }
+        return angle;
+    },
+    getAllInteractions: function getAllInteractions() {
+        return interactions.slice();
+    }
+};
+
+function start(event) {
+    var touch;
+
+    for (var i = 0; i < event.changedTouches.length; i++) {
+        touch = event.changedTouches[i];
+        new Interaction(event, event.changedTouches[i]).start(event, touch);
+    }
+}
+function drag(event) {
+    var touch;
+
+    for (var i = 0; i < event.changedTouches.length; i++) {
+        touch = event.changedTouches[i];
+        getInteraction(touch.identifier).drag(event, touch);
+    }
+}
+function end(event) {
+    var touch;
+
+    for (var i = 0; i < event.changedTouches.length; i++) {
+        touch = event.changedTouches[i];
+        getInteraction(touch.identifier).end(event, touch).destroy();
+    }
+}
+function cancel(event) {
+    var touch;
+
+    for (var i = 0; i < event.changedTouches.length; i++) {
+        touch = event.changedTouches[i];
+        getInteraction(touch.identifier).cancel(event, touch).destroy();
+    }
+}
+
+addEvent(document, 'touchstart', start);
+addEvent(document, 'touchmove', drag);
+addEvent(document, 'touchend', end);
+addEvent(document, 'touchcancel', cancel);
+
+var mouseIsDown = false;
+addEvent(document, 'mousedown', function (event) {
+    mouseIsDown = true;
+    if (!interactions.length) {
+        new Interaction(event);
+    }
+    getInteraction().start(event);
+});
+addEvent(document, 'mousemove', function (event) {
+    if (!interactions.length) {
+        new Interaction(event);
+    }
+    var interaction = getInteraction();
+    if (!interaction) {
+        return;
+    }
+    if (mouseIsDown) {
+        interaction.drag(event);
+    } else {
+        interaction.move(event);
+    }
+});
+addEvent(document, 'mouseup', function (event) {
+    mouseIsDown = false;
+    var interaction = getInteraction();
+    if (!interaction) {
+        return;
+    }
+    interaction.end(event, null);
+});
+
+function addEvent(element, type, callback) {
+    if (element.addEventListener) {
+        element.addEventListener(type, callback);
+    } else if (document.attachEvent) {
+        element.attachEvent("on" + type, callback);
+    }
+}
+
+module.exports = interact;
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+function KeyboardCode(code, success) {
+    this.code = code || [];
+    this.success = success || function () {};
+    this.codeIndex = 0;
+
+    if (window.addEventListener) {
+        window.addEventListener("keyup", this.checkCode.bind(this), false);
+    } else {
+        window.attachEvent("onkeyup", this.checkCode.bind(this));
+    }
+}
+
+KeyboardCode.prototype.checkCode = function checkCode(event) {
+    if (event.keyCode === this.code[this.codeIndex++]) {
+        if (this.codeIndex === this.code.length) {
+            this.success();
+            this.codeIndex = 0;
+        }
+    } else {
+        this.codeIndex = 0;
+    }
+};
+
+module.exports = KeyboardCode;
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var KonamiKeyboard = __webpack_require__(8),
+    KonamiTouch = __webpack_require__(9);
+
+function Konami(success) {
+    new KonamiKeyboard(success || function () {});
+    new KonamiTouch(success || function () {});
+}
+
+Konami.prototype.constructor = Konami;
+
+module.exports = Konami;
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var konamiCode = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65, 13],
+    KeyboardCode = __webpack_require__(6);
+
+function KonamiKeyboard(success) {
+    KeyboardCode.call(this, konamiCode, success || function () {});
+}
+
+KonamiKeyboard.prototype = Object.create(KeyboardCode.prototype);
+KonamiKeyboard.prototype.constructor = KonamiKeyboard;
+
+module.exports = KonamiKeyboard;
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var konamiCode = ['up', 'up', 'down', 'down', 'left', 'right', 'left', 'right', 'tap', 'tap', 'tap'],
+    GestureDetector = __webpack_require__(4),
+    radiansToDegrees = __webpack_require__(11),
+    linearRegresion = __webpack_require__(10);
+
+function getGestureVector(moves) {
+    var line = linearRegresion(moves),
+        direction = 0,
+        magitude = 0;
+
+    if (line.length > 2) {
+        var startPoint = line[0],
+            endPoint = line[line.length - 1];
+
+        direction = radiansToDegrees(Math.atan2(-(startPoint.x - endPoint.x), startPoint.y - endPoint.y));
+        magitude = Math.sqrt(Math.pow(Math.abs(startPoint.x - endPoint.x), 2) + Math.pow(Math.abs(startPoint.y - endPoint.y), 2));
+    }
+
+    return {
+        direction: direction,
+        magitude: magitude
+    };
+}
+
+function KonamiTouch(success) {
+
+    this.code = konamiCode;
+    this.success = success || function () {};
+    this.codeIndex = 0;
+
+    var detector = new GestureDetector();
+
+    detector.gestures.push(function (moves) {
+        var vector = getGestureVector(moves);
+
+        if (vector.magitude < 5) {
+            return 'tap';
+        }
+        if (vector.magitude > 5 && vector.magitude < 20) {
+            return;
+        }
+
+        if (vector.direction > -45 && vector.direction < 45) {
+            return 'up';
+        }
+        if (vector.direction < -135 || vector.direction > 135) {
+            return 'down';
+        }
+        if (vector.direction < -45 && vector.direction > -135) {
+            return 'left';
+        }
+        if (vector.direction > 45 && vector.direction < 135) {
+            return 'right';
+        }
+    });
+
+    detector.on('gesture', this.checkCode.bind(this));
+}
+
+KonamiTouch.prototype.checkCode = function checkCode(event) {
+    if (event.name === this.code[this.codeIndex++]) {
+        if (this.codeIndex === this.code.length) {
+            this.success();
+            this.codeIndex = 0;
+        }
+    } else {
+        this.codeIndex = 0;
+    }
+};
+
+module.exports = KonamiTouch;
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function linearRegresion(points) {
+    var sumX = 0,
+        sumY = 0,
+        sumXbyY = 0,
+        sumXbyX = 0,
+        x = 0,
+        y = 0,
+        numberOfPoints = points.length,
+        results = [],
+        m,
+        b;
+
+    if (numberOfPoints === 0) {
+        return [];
+    }
+
+    for (var i = 0; i < numberOfPoints; i++) {
+        x = points[i].x;
+        y = points[i].y;
+        sumX += x;
+        sumY += y;
+        sumXbyX += x * x;
+        sumXbyY += x * y;
+    }
+
+    m = (numberOfPoints * sumXbyY - sumX * sumY) / (numberOfPoints * sumXbyX - sumX * sumX);
+    b = sumY / numberOfPoints - m * sumX / numberOfPoints;
+
+    for (var i = 0; i < numberOfPoints; i++) {
+        results.push({
+            x: points[i].x,
+            y: points[i].x * m + b
+        });
+    }
+
+    return results;
+};
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var constants = __webpack_require__(12);
+
+module.exports = function (radians) {
+    return radians / constants.radiansInACircle * constants.degreesInACircle;
+};
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var pi = Math.PI;
+
+module.exports = {
+    pi: pi,
+    degreesInACircle: 360,
+    radiansInACircle: 2 * pi
+};
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _horseTier = __webpack_require__(23);
 
 var HorseTierComponent = _interopRequireWildcard(_horseTier);
 
-var _timeStatus = __webpack_require__(16);
+var _timeStatus = __webpack_require__(26);
 
 var TimeStatusComponent = _interopRequireWildcard(_timeStatus);
 
@@ -232,25 +1181,21 @@ module.exports = {
         'time-status': TimeStatusComponent
     },
     computed: {
-        submitAllowed: function submitAllowed() {
-            console.log("submitAllowed", window.submitAllowed);
-            return window.submitAllowed;
+        submitEnabled: function submitEnabled() {
+            return this.submitAllowed;
         }
     },
-    props: ['servername', 'data', 'now'],
+    props: ['servername', 'data', 'now', 'submitAllowed'],
     methods: {
         updateTiming: function updateTiming(e) {
             var pos = { posX: e.clientX, posY: e.clientY };
-            eventBus.$emit('updateTiming', this.servername, pos);
-        },
-        currentStatus: function currentStatus(diffInMinutes) {
-            if (diffInMinutes > 1) return "Last observed race was";else if (diffInMinutes >= -5) return "Registration is currently available and closes";else if (diffInMinutes > -10) return "Registration will be available very soon";else return "Registration will be available";
+            window.eventBus.$emit('updateTiming', this.servername, pos);
         }
     }
 };
 
 /***/ }),
-/* 4 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -272,7 +1217,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 5 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -299,7 +1244,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 6 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -328,7 +1273,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 7 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -346,11 +1291,14 @@ module.exports = {
             return Math.floor(Math.abs(minutes / 60));
         },
         parseTime: function parseTime(minutes) {
-            if (minutes < -60) return 'Last observed race was over ' + this.minutesToHours(minutes) + ' hours ago';
-            if (minutes < -5) return 'Last observed race was ' + Math.abs(minutes) + ' minutes ago';
-            if (minutes > -5 && minutes < 0) return "Registration active";
+            if (minutes < -120) return 'Over ' + this.minutesToHours(minutes) + ' hours ago';
+            if (minutes < -5) return Math.abs(minutes) + ' minutes ago (Next estimated race in ' + (60 - Math.abs(minutes) % 60 + 5) + ' minutes)';
+            if (minutes >= -5 && minutes <= 0) return 5 - Math.abs(minutes) + ' minutes';
 
-            return 'Next race in ' + minutes + ' minutes';
+            return minutes + ' minutes';
+        },
+        currentStatus: function currentStatus(diffInMinutes) {
+            if (diffInMinutes < -5) return "Last observed race was";else if (diffInMinutes <= 0) return "Registration is currently available and closes in";else if (diffInMinutes < 10) return "Registration will be available very soon";else return "Registration will be available in";
         }
     },
     computed: {
@@ -362,6 +1310,14 @@ module.exports = {
             this.timeLeftInMinutes = Math.floor(diffInSeconds / 60);
             return this.parseTime(this.timeLeftInMinutes);
         },
+        secondaryStatus: function secondaryStatus() {
+            var startTime = new Date();
+            startTime.setTime(this.start);
+            var diffInSeconds = (startTime.getTime() - this.now) / 1000;
+            this.timeLeftInMinutes = Math.floor(diffInSeconds / 60);
+
+            return this.currentStatus(this.timeLeftInMinutes);
+        },
         cssClass: function cssClass() {
             return {
                 'btn-success': this.timeLeftInMinutes >= 0,
@@ -372,29 +1328,34 @@ module.exports = {
 };
 
 /***/ }),
-/* 8 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _timingDialog = __webpack_require__(17);
+var _timingDialog = __webpack_require__(27);
 
 var timingDialog = _interopRequireWildcard(_timingDialog);
 
-var _horseRace = __webpack_require__(12);
+var _horseRace = __webpack_require__(22);
 
 var horseRace = _interopRequireWildcard(_horseRace);
 
-var _regionSelect = __webpack_require__(15);
+var _regionSelect = __webpack_require__(25);
 
 var regionSelect = _interopRequireWildcard(_regionSelect);
+
+var _index = __webpack_require__(7);
+
+var K = _interopRequireWildcard(_index);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 module.exports = {
     el: '#bd-app',
     data: {
+        submitAllowed: false,
         region: "eu",
         allRegions: {},
         servernames: [],
@@ -404,26 +1365,19 @@ module.exports = {
     created: function created() {
         var _this = this;
 
-        window.eventBus = new Vue();
-        console.log("loading app");
-
         this.fetchServerNames();
-        var hash = document.location.hash;
-        hash = hash.substr(1, hash.length - 1);
+        this.handleHash();
 
-        if (hash.includes('&submitallowed')) {
-            console.log("submitAllowed");
-            window.submitAllowed = true;
-            hash.replace('&submitallowed', '');
-        }
+        new K.default(function () {
+            return _this.submitAllowed = true;
+        });
 
-        if (hash !== 'eu' && hash !== 'us') hash = 'eu';
-        this.setRegion(hash);
-        setInterval(function () {
-            return _this.now = new Date().getTime();
-        }, 1000);
-        eventBus.$on('updateTiming', function (serverName, pos) {
-            eventBus.$emit('update-dialog', {
+        window.onhashchange = this.handleHash;
+
+        setInterval(this.updateTime, 1000);
+
+        window.eventBus.$on('updateTiming', function (serverName, pos) {
+            window.eventBus.$emit('update-dialog', {
                 region: _this.region,
                 id: _this.servernames.indexOf(serverName),
                 servername: serverName,
@@ -432,7 +1386,7 @@ module.exports = {
             });
         });
 
-        eventBus.$on('refresh-timings', function () {
+        window.eventBus.$on('refresh-timings', function () {
             _this.refreshData();
         });
 
@@ -444,6 +1398,21 @@ module.exports = {
         'region-select': regionSelect
     },
     methods: {
+        handleHash: function handleHash() {
+            var hash = document.location.hash;
+            hash = hash.substr(1, hash.length - 1);
+
+            if (hash.includes('&submitallowed')) {
+                this.submitAllowed = true;
+                hash.replace('&submitallowed', '');
+            }
+
+            if (hash !== 'eu' && hash !== 'us') hash = 'eu';
+            this.setRegion(hash);
+        },
+        updateTime: function updateTime() {
+            this.now = new Date().getTime();
+        },
         fetchServerNames: function fetchServerNames() {
             var _this2 = this;
 
@@ -478,19 +1447,20 @@ module.exports = {
 };
 
 /***/ }),
-/* 9 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _radioButton = __webpack_require__(14);
+var _radioButton = __webpack_require__(24);
 
 var RadioButtonComponent = _interopRequireWildcard(_radioButton);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 module.exports = {
+    props: ['submitAllowed'],
     data: function data() {
         return {
             enabled: false,
@@ -506,8 +1476,7 @@ module.exports = {
     },
     computed: {
         isEnabled: function isEnabled() {
-            console.log("submitAllowed", window.submitAllowed);
-            return this.enabled && window.submitAllowed;
+            return this.enabled && this["submitAllowed"];
         },
         positioning: function positioning() {
             var style = {
@@ -523,7 +1492,7 @@ module.exports = {
     created: function created() {
         var _this = this;
 
-        eventBus.$on('update-dialog', function (data) {
+        window.eventBus.$on('update-dialog', function (data) {
             _this.server = data;
             _this.enabled = true;
             _this.posX = data.posX;
@@ -565,7 +1534,7 @@ module.exports = {
                 method: "POST",
                 body: JSON.stringify(payload)
             }).then(function () {
-                eventBus.$emit('refresh-timings');
+                window.eventBus.$emit('refresh-timings');
                 _this2.time = 0;
                 _this2.onClose();
             }).catch(function () {
@@ -579,7 +1548,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 10 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -614,7 +1583,7 @@ module.exports = function listToStyles(parentId, list) {
 };
 
 /***/ }),
-/* 11 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)();
@@ -628,20 +1597,20 @@ exports.push([module.i, "\n.outer-dialog {\n    z-index: 1000;\n    background-c
 
 
 /***/ }),
-/* 12 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(3),
+  __webpack_require__(13),
   /* template */
-  __webpack_require__(19),
+  __webpack_require__(29),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Projects\\bdtimerservice\\client\\horse-race.vue"
+Component.options.__file = "F:\\Projects\\BlackDesertHorseTiming\\client\\horse-race.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] horse-race.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -652,9 +1621,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-48095f56", Component.options)
+    hotAPI.createRecord("data-v-46fbee97", Component.options)
   } else {
-    hotAPI.reload("data-v-48095f56", Component.options)
+    hotAPI.reload("data-v-46fbee97", Component.options)
   }
 })()}
 
@@ -662,20 +1631,20 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 13 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(4),
+  __webpack_require__(14),
   /* template */
-  __webpack_require__(21),
+  __webpack_require__(31),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Projects\\bdtimerservice\\client\\horse-tier.vue"
+Component.options.__file = "F:\\Projects\\BlackDesertHorseTiming\\client\\horse-tier.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] horse-tier.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -686,9 +1655,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-79c31432", Component.options)
+    hotAPI.createRecord("data-v-7bddf5b0", Component.options)
   } else {
-    hotAPI.reload("data-v-79c31432", Component.options)
+    hotAPI.reload("data-v-7bddf5b0", Component.options)
   }
 })()}
 
@@ -696,20 +1665,20 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 14 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(5),
+  __webpack_require__(15),
   /* template */
-  __webpack_require__(22),
+  __webpack_require__(32),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Projects\\bdtimerservice\\client\\radio-button.vue"
+Component.options.__file = "F:\\Projects\\BlackDesertHorseTiming\\client\\radio-button.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] radio-button.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -720,9 +1689,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-9dbf75ce", Component.options)
+    hotAPI.createRecord("data-v-84a7efcc", Component.options)
   } else {
-    hotAPI.reload("data-v-9dbf75ce", Component.options)
+    hotAPI.reload("data-v-84a7efcc", Component.options)
   }
 })()}
 
@@ -730,20 +1699,20 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 15 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(6),
+  __webpack_require__(16),
   /* template */
-  __webpack_require__(18),
+  __webpack_require__(33),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Projects\\bdtimerservice\\client\\region-select.vue"
+Component.options.__file = "F:\\Projects\\BlackDesertHorseTiming\\client\\region-select.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] region-select.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -754,9 +1723,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-2fdb5e70", Component.options)
+    hotAPI.createRecord("data-v-967008e2", Component.options)
   } else {
-    hotAPI.reload("data-v-2fdb5e70", Component.options)
+    hotAPI.reload("data-v-967008e2", Component.options)
   }
 })()}
 
@@ -764,20 +1733,20 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 16 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(7),
+  __webpack_require__(17),
   /* template */
-  __webpack_require__(24),
+  __webpack_require__(30),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Projects\\bdtimerservice\\client\\time-status.vue"
+Component.options.__file = "F:\\Projects\\BlackDesertHorseTiming\\client\\time-status.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] time-status.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -788,9 +1757,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-d66724a6", Component.options)
+    hotAPI.createRecord("data-v-742bc68c", Component.options)
   } else {
-    hotAPI.reload("data-v-d66724a6", Component.options)
+    hotAPI.reload("data-v-742bc68c", Component.options)
   }
 })()}
 
@@ -798,24 +1767,24 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 17 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(25)
+__webpack_require__(35)
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(9),
+  __webpack_require__(19),
   /* template */
-  __webpack_require__(20),
+  __webpack_require__(28),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "C:\\Projects\\bdtimerservice\\client\\timing-dialog.vue"
+Component.options.__file = "F:\\Projects\\BlackDesertHorseTiming\\client\\timing-dialog.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] timing-dialog.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -826,9 +1795,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-5e6245a6", Component.options)
+    hotAPI.createRecord("data-v-39623a76", Component.options)
   } else {
-    hotAPI.reload("data-v-5e6245a6", Component.options)
+    hotAPI.reload("data-v-39623a76", Component.options)
   }
 })()}
 
@@ -836,79 +1805,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('button', {
-    class: _vm.cssClass,
-    staticStyle: {
-      "font-size": "125%"
-    },
-    on: {
-      "click": _vm.changeRegion
-    }
-  }, [_vm._v("\n    " + _vm._s(this.name()) + "\n")])
-},staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-2fdb5e70", module.exports)
-  }
-}
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "timingRow"
-  }, [_c('h4', [_vm._v(_vm._s(_vm.servername))]), _vm._v(" "), _c('div', [_c('horse-tier', {
-    attrs: {
-      "title": "Unknown Tier",
-      "tier": "?",
-      "currentTier": _vm.data.horseClass
-    }
-  }), _vm._v(" "), _vm._l((8), function(n) {
-    return _c('horse-tier', {
-      attrs: {
-        "tier": n,
-        "currentTier": _vm.data.horseClass
-      }
-    })
-  }), _vm._v(" "), _c('time-status', {
-    attrs: {
-      "now": _vm.now,
-      "start": _vm.data.startTime,
-      "registered": _vm.data.registeredTime
-    }
-  }), _vm._v(" "), (_vm.submitAllowed) ? _c('button', {
-    staticClass: "btn btn-xs btn-info glyphicon glyphicon-cloud-upload",
-    staticStyle: {
-      "position": "absolute",
-      "right": "3px",
-      "top": "3px",
-      "border-radius": "15px"
-    },
-    on: {
-      "click": function($event) {
-        _vm.updateTiming($event)
-      }
-    }
-  }) : _vm._e()], 2)])
-},staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-48095f56", module.exports)
-  }
-}
-
-/***/ }),
-/* 20 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -999,12 +1896,86 @@ module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-5e6245a6", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-39623a76", module.exports)
   }
 }
 
 /***/ }),
-/* 21 */
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "timingRow"
+  }, [_c('h4', [_vm._v(_vm._s(_vm.servername))]), _vm._v(" "), _c('div', [_c('horse-tier', {
+    attrs: {
+      "title": "Unknown Tier",
+      "tier": "?",
+      "currentTier": _vm.data.horseClass
+    }
+  }), _vm._v(" "), _vm._l((8), function(n) {
+    return _c('horse-tier', {
+      attrs: {
+        "tier": n,
+        "currentTier": _vm.data.horseClass
+      }
+    })
+  }), _vm._v(" "), _c('time-status', {
+    attrs: {
+      "now": _vm.now,
+      "start": _vm.data.startTime,
+      "registered": _vm.data.registeredTime
+    }
+  }), _vm._v(" "), (_vm.submitEnabled) ? _c('button', {
+    staticClass: "btn btn-xs btn-info glyphicon glyphicon-cloud-upload",
+    staticStyle: {
+      "position": "absolute",
+      "right": "3px",
+      "top": "3px",
+      "border-radius": "15px"
+    },
+    on: {
+      "click": function($event) {
+        _vm.updateTiming($event)
+      }
+    }
+  }) : _vm._e()], 2)])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-46fbee97", module.exports)
+  }
+}
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    class: _vm.cssClass,
+    staticStyle: {
+      "border-radius": "20px",
+      "margin": "6px auto",
+      "padding": "2px",
+      "left": "5%",
+      "width": "90%",
+      "font-size": "120%"
+    }
+  }, [_c('div', [_vm._v(_vm._s(this.secondaryStatus))]), _vm._v(" "), _c('div', [_vm._v(_vm._s(this.timeLeft))])])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-742bc68c", module.exports)
+  }
+}
+
+/***/ }),
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -1016,12 +1987,12 @@ module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-79c31432", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-7bddf5b0", module.exports)
   }
 }
 
 /***/ }),
-/* 22 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -1036,16 +2007,43 @@ module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-9dbf75ce", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-84a7efcc", module.exports)
   }
 }
 
 /***/ }),
-/* 23 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('span', [_c('timing-dialog'), _vm._v(" "), _c('div', {
+  return _c('button', {
+    class: _vm.cssClass,
+    staticStyle: {
+      "font-size": "125%"
+    },
+    on: {
+      "click": _vm.changeRegion
+    }
+  }, [_vm._v("\n    " + _vm._s(this.name()) + "\n")])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-967008e2", module.exports)
+  }
+}
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('span', [_c('timing-dialog', {
+    attrs: {
+      "submit-allowed": _vm.submitAllowed
+    }
+  }), _vm._v(" "), _c('div', {
     staticStyle: {
       "margin-bottom": "15px"
     }
@@ -1079,6 +2077,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       attrs: {
         "now": _vm.now,
         "data": data,
+        "submit-allowed": _vm.submitAllowed,
         "servername": _vm.servernames[i]
       }
     })
@@ -1088,53 +2087,28 @@ module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-d5b6ff9a", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-d7d1e118", module.exports)
   }
 }
 
 /***/ }),
-/* 24 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    class: _vm.cssClass,
-    staticStyle: {
-      "border-radius": "20px",
-      "margin": "6px auto",
-      "padding": "2px",
-      "left": "5%",
-      "width": "90%",
-      "font-size": "120%"
-    }
-  }, [_vm._v("\n    " + _vm._s(this.timeLeft) + "\n")])
-},staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-d66724a6", module.exports)
-  }
-}
-
-/***/ }),
-/* 25 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(11);
+var content = __webpack_require__(21);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(26)("75cea26c", content, false);
+var update = __webpack_require__(36)("5e97a1d7", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
  if(!content.locals) {
-   module.hot.accept("!!./../node_modules/css-loader/index.js!./../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-5e6245a6!./../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./timing-dialog.vue", function() {
-     var newContent = require("!!./../node_modules/css-loader/index.js!./../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-5e6245a6!./../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./timing-dialog.vue");
+   module.hot.accept("!!./../node_modules/css-loader/index.js!./../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-39623a76!./../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./timing-dialog.vue", function() {
+     var newContent = require("!!./../node_modules/css-loader/index.js!./../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-39623a76!./../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./timing-dialog.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });
@@ -1144,7 +2118,7 @@ if(false) {
 }
 
 /***/ }),
-/* 26 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -1163,7 +2137,7 @@ if (typeof DEBUG !== 'undefined' && DEBUG) {
   ) }
 }
 
-var listToStyles = __webpack_require__(10)
+var listToStyles = __webpack_require__(20)
 
 /*
 type StyleObject = {
@@ -1380,7 +2354,7 @@ function applyToTag (styleElement, obj) {
 
 
 /***/ }),
-/* 27 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1389,6 +2363,7 @@ function applyToTag (styleElement, obj) {
 var vueApp = __webpack_require__(1);
 
 window.bootstrapTimingsApp = function () {
+    window.eventBus = new Vue();
     new Vue(vueApp);
 };
 
