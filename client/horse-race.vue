@@ -17,16 +17,6 @@
             updateTiming: function (e) {
                 let pos = {posX: e.clientX, posY: e.clientY};
                 eventBus.$emit('updateTiming', this.servername, pos);
-            },
-            currentStatus: function (diffInMinutes) {
-                if (diffInMinutes > 1)
-                    return "Last observed race was";
-                else if (diffInMinutes >= -5)
-                    return "Registration is currently available and closes";
-                else if (diffInMinutes > -10)
-                    return "Registration will be available very soon";
-                else
-                    return "Registration will be available";
             }
         }
     }
