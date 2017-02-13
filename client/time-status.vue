@@ -57,7 +57,7 @@
 <template>
     <div v-bind:class="cssClass" style="border-radius: 20px; margin: 6px auto; padding: 2px; left: 5%; width: 90%; font-size: 120%">
         <div>{{this.secondaryStatus}}</div>
-        <div>{{this.timeLeft}}</div>
+        <div><strong>{{this.timeLeft}}</strong></div>
     </div>
 </template>
 

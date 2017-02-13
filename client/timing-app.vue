@@ -100,8 +100,7 @@
             <region-select region="eu" :selected-region="region" v-on:new-region="setRegion('eu')"></region-select>
         </div>
         <div>
-            <horse-race class="horseRace bg-info" v-for="(data,i) in timings" :now="now" :data="data"
-                        :submit-allowed="submitAllowed" :servername="servernames[i]"></horse-race>
+            <horse-race class="horseRace bg-info" v-for="(data,i) in timings" :now="now" :data="data" :submit-allowed="submitAllowed" :servername="servernames[i]"></horse-race>
         </div>
     </span>
 </template>
