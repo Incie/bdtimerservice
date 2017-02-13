@@ -2,7 +2,7 @@
     import * as timingDialog from './timing-dialog.vue';
     import * as horseRace from './horse-race.vue';
     import * as regionSelect from './region-select.vue';
-    import * as K from './../node_modules/konami-js/index';
+    import * as K from 'konami-js';
 
     module.exports = {
         el: '#bd-app',
