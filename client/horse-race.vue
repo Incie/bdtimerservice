@@ -8,11 +8,11 @@
             'time-status': TimeStatusComponent
         },
         computed: {
-            submitAllowed: function(){
-                return window.submitAllowed;
+            submitEnabled: function(){
+                return this.submitAllowed;
             }
         },
-        props: ['servername', 'data', 'now'],
+        props: ['servername', 'data', 'now', 'submitAllowed'],
             methods: {
             updateTiming: function (e) {
                 let pos = {posX: e.clientX, posY: e.clientY};
@@ -28,7 +28,7 @@
             <horse-tier title="Unknown Tier" tier="?" :currentTier="data.horseClass"></horse-tier>
             <horse-tier v-for="n in 8" :tier="n" :currentTier="data.horseClass"></horse-tier>
             <time-status :now="now" :start="data.startTime" :registered="data.registeredTime"></time-status>
-            <button v-if="submitAllowed" style="position:absolute; right: 3px; top:3px; border-radius: 15px;" class="btn btn-xs btn-info glyphicon glyphicon-cloud-upload" @click="updateTiming($event)"></button>
+            <button v-if="submitEnabled" style="position:absolute; right: 3px; top:3px; border-radius: 15px;" class="btn btn-xs btn-info glyphicon glyphicon-cloud-upload" @click="updateTiming($event)"></button>
         </div>
     </div>
 </template>

@@ -2,6 +2,7 @@
     import * as RadioButtonComponent from './radio-button.vue';
 
     module.exports = {
+        props: ['submitAllowed'],
         data: function () {
             return {
                 enabled: false,
@@ -17,7 +18,7 @@
         },
         computed: {
             isEnabled: function(){
-                return this.enabled && window.submitAllowed;
+                return this.enabled && this["submitAllowed"];
             },
             positioning: function(){
                 let style = {
