@@ -12,13 +12,13 @@
                 return {
                     'btn': true,
                     'btn-sm': true,
-                    'btn-info': b,
-                    'btn-warning': !b
+                    'btn-success': b,
+                    'btn-danger': !b
                 };
             }
         }
     };
 </script>
 <template>
-    <label :class="cssClass" @click="onClick">{{value}}</label>
+    <label :class="cssClass" @click="onClick"><strong>{{value}}</strong></label>
 </template>

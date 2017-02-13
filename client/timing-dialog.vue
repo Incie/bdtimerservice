@@ -5,6 +5,7 @@
         props: ['submitAllowed'],
         data: function () {
             return {
+                registrationAvailable: false,
                 enabled: false,
                 server: {},
                 tier: 1,
@@ -42,6 +43,9 @@
             });
         },
         methods: {
+            toggleRegister: function(){
+                this.registrationAvailable = !this.registrationAvailable;
+            },
             radio: function(newTierValue){
                 this.tier = newTierValue;
             },
@@ -59,12 +63,15 @@
                 if( this.minutes === undefined )
                     return;
 
+                let time = new Date().getTime() + this.secondsToMilliseconds( Number(this.minutes) * 60);
+                if( this.registrationAvailable )
+                    time -= this.secondsToMilliseconds( 5 * 60 + 15 );
+
                 const payload = {
                     region: this.server.region,
                     serverid: this.server.id,
                     horseClass: this.tier,
-                    //TODO: Only add the extra 5 minutes if a "registration is available" checkbox is unchecked
-                    time: new Date().getTime() + this.secondsToMilliseconds( Number(this.minutes) * 60),
+                    time: time
                 };
 
                 fetch("/update", {
@@ -125,6 +132,9 @@
             <h4>Update race timing for <strong style="font-size: 140%">{{server.servername}} on {{server.region}}</strong></h4>
             <div style="margin:5px">
                 Minutes until race
+                <div>
+                    <label @click="toggleRegister" style="border-radius: 5px; padding: 2px;" class="btn-primary">Registration Available?<input v-model="registrationAvailable" type="checkbox"></label>
+                </div>
                 <div>
                     <input style="padding: 4px;" class="minutes" type="text" v-model="minutes" placeholder="[0-60]"><br/>
                 </div>
