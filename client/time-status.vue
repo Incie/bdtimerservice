@@ -11,17 +11,17 @@
                 return Math.floor(Math.abs(minutes / 60));
             },
             parseTime: function (minutes) {
-                if (minutes < -120) return `Over ${this.minutesToHours(minutes)} hours ago`;
-                if (minutes < -5) return `${Math.abs(minutes)} minutes ago (Next estimated race in ${60 - (Math.abs(minutes) % 60) + 5} minutes)`;
-                if (minutes >= -5 && minutes <= 0) return `${5 - Math.abs(minutes)} minutes`;
-
-                return `${minutes} minutes`;
+                if (minutes < -600) return `Over ${this.minutesToHours(minutes)} hours ago`;
+				else if (minutes < -120) return `${this.minutesToHours(minutes)} hours ago (Next estimated race in ${71 - (Math.abs(minutes) % 71)} minutes)`;
+				else if (minutes < -5) return `${-(5 - Math.abs(minutes))} minutes ago (Next estimated race in ${71 - (Math.abs(minutes) % 71)} minutes)`;
+                else if (minutes >= -5 && minutes <= 0) return `${5 - Math.abs(minutes)} minutes`;
+				return `${minutes} minutes`;
             },
             currentStatus: function (diffInMinutes) {
                 if (diffInMinutes < -5 )
                     return "Last observed race was";
                 else if (diffInMinutes <= 0 )
-                    return "Registration is currently available and closes in";
+                    return "Registration is available and closes in";
                 else if (diffInMinutes < 10)
                     return "Registration will be available very soon";
                 else

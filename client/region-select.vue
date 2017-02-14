@@ -6,7 +6,8 @@
                 let thisRegion = (this.region === this.selectedRegion);
                 return {
                     'btn': true,
-                    'btn-warning': !thisRegion,
+                    //'btn-warning': !thisRegion,
+					'btn-default': !thisRegion,
                     'btn-success': thisRegion
                 };
             }
