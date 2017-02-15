@@ -12,8 +12,11 @@
             },
             parseTime: function (minutes) {
                 if (minutes < -600) return `Over ${this.minutesToHours(minutes)} hours ago`;
-				else if (minutes < -120) return `${this.minutesToHours(minutes)} hours ago (Next estimated race in ${71 - (Math.abs(minutes) % 71)} minutes)`;
-				else if (minutes < -5) return `${-(5 - Math.abs(minutes))} minutes ago (Next estimated race in ${71 - (Math.abs(minutes) % 71)} minutes)`;
+				else if (minutes < -5) {
+					let nextEstimatedRace = 71 - (Math.abs(minutes) % 71);
+					if (minutes < -120) return `${this.minutesToHours(minutes)} hours ago (Next estimated race in ${nextEstimatedRace} minutes)`;
+					else if (minutes < -5) return `${-(5 - Math.abs(minutes))} minutes ago (Next estimated race in ${nextEstimatedRace} minutes)`;		
+				}
                 else if (minutes >= -5 && minutes <= 0) return `${5 - Math.abs(minutes)} minutes`;
 				return `${minutes} minutes`;
             },
@@ -48,7 +51,7 @@
             cssClass: function () {
                 return {
                     'btn-success': (this.timeLeftInMinutes >= 0),
-                    'btn-warning': (this.timeLeftInMinutes >= -5 && this.timeLeftInMinutes < 0)
+                    'btn-warning': (this.timeLeftInMinutes >= -10 && this.timeLeftInMinutes < 0)
                 };
             }
         }
