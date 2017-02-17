@@ -1,3 +1,8 @@
+/* TODO
+- Don't show horse tier highlight after race is over?
+- Add a "?" option to horse tier selection (we can 0 as unknown for horse tier) which makes it possible to submit a race time without knowing horse tier.
+*/
+
 let express = require('express');
 let path = require('path');
 let morgan = require('morgan');
