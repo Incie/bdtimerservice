@@ -9,6 +9,7 @@ let morgan = require('morgan');
 let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
 let db = require('./modules/db');
+let discordBot = require('./modules/discordbot');
 
 let apiRouter = require('./modules/api.js');
 
@@ -37,4 +38,7 @@ app.listen(port, function () {
     console.log('Listening on ' + port);
     console.log('Platform: ' + process.platform + ' ' + process.arch + '(' + process.pid + ')');
     console.log('cwd: ' + process.cwd());
+
+    console.log('Initializing discordbot.. ');
+    discordBot.init();
 });
