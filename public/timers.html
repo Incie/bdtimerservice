@@ -3,64 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>BlackDesertHorseRaceTimings</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <script src="https://unpkg.com/vue@2.1.10/dist/vue.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.2/fetch.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="/stylesheets/style.css">
-    <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>-->
-    <script src="/javascripts/timings.js"></script>
+
+    <script src="/javascripts/timings.bundle.js"></script>
 </head>
-<body onload="initApp()">
-    <div class="btn-danger" style="text-align:center; font-size: 150%;">Page only support viewing in Google Chrome at the moment</div>
+<body onload="window.bootstrapTimingsApp()">
+    <div class="btn-danger" style="text-align:center; font-size: 150%;">
+        Page supports viewing in Chrome and Firefox
+    </div>
     <div id="main">
         <h1>Black Desert Horse Race Application Service</h1>
-        <div>
-            <span id="region-eu" class="region">
-                <h4>EU</h4>
-                <div id="timings-eu"></div>
-            </span>
-            <span id="region-us" class="region">
-                <h4>US</h4>
-                <div id="timings-us"></div>
-            </span>
-        </div>
-        <div style="border:1px solid red; border-radius: 3px; margin-top: 150px">
-            <h4>Push Update</h4>
-            <span style="display: inline-block">
-                <div>
-                    Region
-                    <label class="selector"><input type="radio" name="update-region" value="eu">EU</label>
-                    <label class="selector"><input type="radio" name="update-region" value="us">US</label>
-                </div>
-                <!--<div>Server </div>-->
-
-                <!--<div>Region <input id="update-region" type="text" placeholder="eu or us"/></div>-->
-                <div>
-                    Channel
-                    <label class="selector"><input type="radio" name="update-serverid" value="0">Vel2</label>
-                    <label class="selector"><input type="radio" name="update-serverid" value="1">Bal2</label>
-                    <label class="selector"><input type="radio" name="update-serverid" value="2">Ser2</label>
-                    <label class="selector"><input type="radio" name="update-serverid" value="3">Cal2</label>
-                    <label class="selector"><input type="radio" name="update-serverid" value="4">Med2</label>
-                    <label class="selector"><input type="radio" name="update-serverid" value="5">Val2</label>
-                </div>
-                <div>
-                    Horse Tier
-                    <label class="selector"><input type="radio" name="update-horseclass" value="1">1</label>
-                    <label class="selector"><input type="radio" name="update-horseclass" value="2">2</label>
-                    <label class="selector"><input type="radio" name="update-horseclass" value="3">3</label>
-                    <label class="selector"><input type="radio" name="update-horseclass" value="4">4</label>
-                    <label class="selector"><input type="radio" name="update-horseclass" value="5">5</label>
-                    <label class="selector"><input type="radio" name="update-horseclass" value="6">6</label>
-                    <label class="selector"><input type="radio" name="update-horseclass" value="7">7</label>
-                    <label class="selector"><input type="radio" name="update-horseclass" value="8">8</label>
-                </div>
-                <div>Time <input id="update-time" type="text" style="" placeholder="Number of minutes"/></div>
-                <div><button onclick="sendTimingUpdate()">Send</button></div>
-            </span>
-            <!--<span style="display: inline-block">-->
-                <!--<div>Login <input id="update-user" type="text" placeholder="User"/></div>-->
-                <!--<div>Password <input id="update-password" type="password" placeholder="Password"/></div>-->
-            <!--</span>-->
-        </div>
+        <div id="bd-app"></div>
     </div>
 </body>
 </html>

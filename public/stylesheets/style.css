@@ -1,19 +1,10 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    padding: 0;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 input {
     text-align: center
-}
-
-#main {
-    width: 75%;
-    margin: auto;
-    border-radius: 5px;
-    height: 100%;
-    padding: 50px;
-    text-align: center;
 }
 
 .region {
@@ -27,11 +18,11 @@ input {
 
 .timingRow {
     border-radius: 15px;
-    background-color: #ddd;
     padding: 5px;
     margin: 2px;
     width: 100%;
     border: 1px solid black;
+    position: relative;
 }
 
 .timingServer {
@@ -44,3 +35,47 @@ input {
     padding: 3px;
 }
 
+.radiolabel {
+    border: 1px solid black;
+    border-radius: 4px;
+    background-color: black;
+    color: white;
+}
+
+.horse-tier {
+    padding: 5px 10px;
+}
+
+@media only screen and (max-width: 1000px) {
+    #main {
+        width: 100%;
+        margin: auto;
+        border-radius: 5px;
+        height: 100%;
+        padding: 50px;
+        text-align: center;
+    }
+
+    .horseRace {
+        margin: auto;
+        width: 100%;
+        padding: 3px;
+    }
+}
+
+@media only screen and (min-width : 1000px) {
+    #main {
+        width: 75%;
+        margin: auto;
+        border-radius: 5px;
+        height: 100%;
+        padding: 50px;
+        text-align: center;
+    }
+
+    .horseRace {
+        margin: auto;
+        width: 50%;
+        padding: 3px;
+    }
+}

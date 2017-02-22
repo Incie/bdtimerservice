@@ -10,61 +10,31 @@ let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
 let db = require('./modules/db');
 
+let apiRouter = require('./modules/api.js');
 
 let app = express();
 
-app.use(morgan(':date[iso] - (HTTP :http-version :status :method) [ip] :remote-addr [time] :response-time[3] ms [response-size] :res[content-length] [url] :url'));
+app.use(morgan(':date[iso] - (HTTP :http-version :status :method) [ip] :real-ip [time] :response-time[3] ms [response-size] :res[content-length] [url] :url'));
+
+if( process.env.ENVIRONMENT === "DEVELOPMENT" ){
+    console.log('Setting DEVELOPMENT session configs');
+    morgan.token('real-ip', function(req, res) { return req.connection.remoteAddress; });
+} else {
+    morgan.token('real-ip', function(req, res) { return req.headers['x-real-ip']; });
+}
 
 app.use(bodyParser.json({limit: '2mb'}));
-app.use(bodyParser.urlencoded({ extended: false, limit: '2mb'}));
+app.use(bodyParser.urlencoded({extended: false, limit: '2mb'}));
 app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-function getAbsolutePath(relativePath){
-    return path.join(__dirname, '/public/', relativePath);
-}
-
-const files = {
-    index: getAbsolutePath('timers.html'),
-};
-
-app.get('/', function(req, res){res.sendFile(files.index);});
-
-app.get('/servernames', function(req, res){
-    res.send({
-        names:[
-            "Velia 2",
-            "Balenos 2",
-            "Serendia 2",
-            "Calpheon 2",
-            "Mediah 2",
-            "Valencia 2"
-        ]
-    });
-});
-
-app.post('/update', function(req, res){
-    const payload = req.body;
-
-    // if( payload.user === 'superadmin' || payload.password === 'hoorayforrolf'){
-        db.update(payload.region, payload.serverid, Number(payload.time), payload.horseClass);
-    // }
-
-    res.send();
-});
-
-app.get('/data', function(req, res) { res.send( db.getAll() ) });
-// app.use( '/api', apiRouter );
-
-app.all('*', function(req, res){
-    res.status(404).send({message:'The hamster did not find this page in the registry'});
-});
+app.use('/', apiRouter );
 
 const port = (process.env.PORT || 3000);
-app.listen(port, function() {
-    console.log('Node Server ('+process.version+')');
-    console.log('Listening on '+port);
-    console.log('Platform: '+process.platform + ' '+process.arch+'('+process.pid+')');
-    console.log('cwd: '+process.cwd() );
+app.listen(port, function () {
+    console.log('Node Server (' + process.version + ')');
+    console.log('Listening on ' + port);
+    console.log('Platform: ' + process.platform + ' ' + process.arch + '(' + process.pid + ')');
+    console.log('cwd: ' + process.cwd());
 });
