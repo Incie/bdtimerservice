@@ -85,7 +85,7 @@ discordClient.on('message', message => {
 
         db.update(region, serverIndex, timestamp, tierId);
 
-        message.channel.sendMessage(`Updated Server ${serverNames[serverIndex]}[${region}] with Tier ${tierId} & ${minutes}m left` )
+        message.channel.sendMessage(`User ${message.author.username} just updated ${serverNames[serverIndex]}[${region}] with Tier ${tierId} & ${minutes}m left` )
     }
 });
 
