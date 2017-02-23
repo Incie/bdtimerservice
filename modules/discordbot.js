@@ -16,10 +16,25 @@ discordClient.on('message', message => {
     if( message.channel.name !== "bot-test" )
         return;
 
+    /** Authorize **/
+     // channel == seasoned_eu_race && role == eu_race_timing
+    //or
+    // channel == seasoned_us_race && role == us_race_timing
+
+    /** Parse Command **/
+
+    // tokenize
+     //foreach token
 
     if( message.content === "!cmd" || message.content === "!command" || message.content === "!race" || message.content === "!help" ){
         message.channel.sendMessage("!race :region :server :tier :time :registration");
         message.channel.sendMessage("!race [us|eu] [Velia|Balenos|Serendia|Calpheon|Mediah|Valencia] [Tier?|1|2|3|4|5|6|7|8] [50m] [optional:registration]");
+        message.channel.sendMessage("[Notes: I am very sensitive to case, so e.g. 'Tier' is not the same as 'tier']");
+        return;
+    }
+
+    else if( message.content === "!link" ){
+        message.channel.sendMessage("https://rolfdev.net");
         return;
     }
 
@@ -56,7 +71,7 @@ discordClient.on('message', message => {
 
         const tier = splits[3];
         const tierId = tier.replace("Tier", '');
-        if ( (Number(tierId) < 1 || Number(tierId) > 8) && tierId !== '?' ) {
+        if ( tier.startsWith("Tier") && (Number(tierId) < 1 || Number(tierId) > 8) && tierId !== '?' ) {
             message.channel.sendMessage(`Invalid Parameter for 'tier': ${tier}[${tierId}]`);
             return;
         }
