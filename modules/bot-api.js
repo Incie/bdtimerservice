@@ -27,7 +27,7 @@ function capitalizeFirstLetter(string) {
  * @return {boolean}
  */
 BotApi.IsValidChannel = function(channel){
-    return authorizedChannels.indexOf(channel) === -1;
+    return authorizedChannels.indexOf(channel) !== -1;
 };
 
 BotApi.HelpTexts = function(){
@@ -95,10 +95,10 @@ BotApi.ParseRace = function(botCommand){
 
 
     let minuteString = registrationActive ?
-                        "registration closes in " + minutes :
-                        "${minutes}m untill registration";
+                        "registration closes in " + (minutes+5) + "m" :
+                        minutes + "m until registration";
 
-    return `User ${message.author.username} just updated ${capitalizeFirstLetter(serverNames[serverIndex])}[${region}] with Tier ${tierId} & ${minuteString}`;
+    return `${capitalizeFirstLetter(serverNames[serverIndex])}[${region}] with Tier ${tierId} & ${minuteString}`;
 };
 
 
