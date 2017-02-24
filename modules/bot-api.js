@@ -8,7 +8,7 @@ const authorizedChannels = [
     "us_seasoned_race_times"
 ];
 
-const vroomUrl = "https://horsevroomvroom.com:3001";
+const vroomUrl = `http://horsevroomvroom.com:${process.env.PORT || 3000}`;
 
 const serverNames = ["velia 2","balenos 2","serendia 2","calpheon 2","mediah 2","valencia 2"];
 
