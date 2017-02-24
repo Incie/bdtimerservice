@@ -63,9 +63,11 @@ BotApi.ParseRace = function(botCommand){
     }
 
     const tier = splits[3];
-    const tierId = Number(tier.replace("tier", ''));
+    let tierId = Number(tier.replace("tier", ''));
     if (!tier.startsWith("tier") || isNaN(tierId) || (typeof(tierId) !== "number" || tierId < 1 || tierId > 8) ) {
-        if( tier !== "tier?" )
+        if( tier === "tier?" )
+            tierId = '?';
+        else
             return `Invalid Parameter for 'tier': ${tier}[${tierId}]`
     }
 
