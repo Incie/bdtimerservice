@@ -14,8 +14,7 @@ const serverNames = ["velia 2","balenos 2","serendia 2","calpheon 2","mediah 2",
 
 const helpTexts = [
     "!race :region :server :tier :time :registration",
-    "!race [us|eu] [Velia|Balenos|Serendia|Calpheon|Mediah|Valencia] [Tier?|1|2|3|4|5|6|7|8] [50m] [optional:registration]",
-    "[Notes: I am very sensitive to case, so e.g. 'Tier' is not the same as 'tier']"
+    "!race [us|eu] [Velia|Balenos|Serendia|Calpheon|Mediah|Valencia] [Tier?|1|2|3|4|5|6|7|8] [50m] [registration]"
 ];
 
 
