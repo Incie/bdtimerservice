@@ -35,6 +35,7 @@ discordClient.on('message', message => {
     }
 
     else if( message.content.startsWith('!race ') ){
+        console.log(`Race Command from '${message.author.username}': '${message.content}'`);
         const response = botApi.ParseRace(message.content);
         message.channel.sendMessage(message.author.username + ": " + response);
     }

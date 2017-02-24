@@ -45,8 +45,6 @@ BotApi.GetVroomUrl = function(){
  * @return {string}
  */
 BotApi.ParseRace = function(botCommand){
-    console.log(botCommand);
-
     const splits = botCommand.toLowerCase().split(' ');
 
     if( splits.length !== 5 && splits.length !== 6 ){
