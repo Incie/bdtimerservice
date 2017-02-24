@@ -2,8 +2,9 @@ function tierTest(input) {
     let tier = input;
     let tierId = Number(tier.replace("tier", ''));
 
-    if (!tier.startsWith("tier") || isNaN(tierId) || (typeof(tierId) !== "number" || tierId < 1 || tierId > 8) && tierId !== '?') {
-        return false;
+    if (!tier.startsWith("tier") || isNaN(tierId) || (typeof(tierId) !== "number" || tierId < 1 || tierId > 8) ) {
+        if( tier !== "tier?" )
+            return false;
     }
 
     return true;

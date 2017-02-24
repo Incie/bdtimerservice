@@ -5,7 +5,7 @@ let BotApi = {};
 const authorizedChannels = [
     "bot-test",
     "eu_seasoned_race_times",
-    "us_seasoned_race_times"
+    "na_seasoned_race_info"
 ];
 
 const vroomUrl = `http://horsevroomvroom.com:${process.env.PORT || 3000}`;
@@ -64,8 +64,9 @@ BotApi.ParseRace = function(botCommand){
 
     const tier = splits[3];
     const tierId = Number(tier.replace("tier", ''));
-    if (!tier.startsWith("tier") || isNaN(tierId) || (typeof(tierId) !== "number" || tierId < 1 || tierId > 8) && tierId !== '?') {
-        return `Invalid Parameter for 'tier': ${tier}[${tierId}]`
+    if (!tier.startsWith("tier") || isNaN(tierId) || (typeof(tierId) !== "number" || tierId < 1 || tierId > 8) ) {
+        if( tier !== "tier?" )
+            return `Invalid Parameter for 'tier': ${tier}[${tierId}]`
     }
 
     const minuteParameter = splits[4];
