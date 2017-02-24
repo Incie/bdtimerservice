@@ -3,12 +3,12 @@ const db = require('./db');
 let BotApi = {};
 
 const authorizedChannels = [
-    "bot-test"
-    // "eu_seasoned_race_times",
-    // "us_seasoned_race_times"
+    "bot-test",
+    "eu_seasoned_race_times",
+    "us_seasoned_race_times"
 ];
 
-const vroomUrl = "https://rolfdev.net";
+const vroomUrl = "https://horsevroomvroom.com:3001";
 
 const serverNames = ["velia 2","balenos 2","serendia 2","calpheon 2","mediah 2","valencia 2"];
 
@@ -45,6 +45,8 @@ BotApi.GetVroomUrl = function(){
  * @return {string}
  */
 BotApi.ParseRace = function(botCommand){
+    console.log(botCommand);
+
     const splits = botCommand.toLowerCase().split(' ');
 
     if( splits.length !== 5 && splits.length !== 6 ){

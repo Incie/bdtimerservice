@@ -31,20 +31,23 @@ router.get('/servernames', function (req, res) {
 });
 
 router.post('/update', function (req, res) {
-    const payload = req.body;
+    res.status(401).send('Update disabled');
+    return;
 
-    if (payload.id < 0 || payload.id > 5)
-        res.status(400).send("Invalid serverId: " + payload.id);
-    else if(payload.region !== 'eu' && payload.region !== 'us')
-        res.status(400).send("Invalid region: " + payload.region);
-    else if (Number(payload.horseClass) < 1 || Number(payload.horseClass) > 8 || (typeof(payload.horseClass) !== "number" && payload.horseClass !== '?') )
-        res.status(400).send("Invalid horse tier: " + payload.horseClass);
-    else if( typeof(payload.time) !== "number" || payload.time === null || payload.time === undefined )
-        res.status(400).send("Invalid time");
-    else {
-        db.update(payload.region, payload.serverid, Number(payload.time), payload.horseClass);
-        res.send();
-    }
+    // const payload = req.body;
+    //
+    // if (payload.id < 0 || payload.id > 5)
+    //     res.status(400).send("Invalid serverId: " + payload.id);
+    // else if(payload.region !== 'eu' && payload.region !== 'us')
+    //     res.status(400).send("Invalid region: " + payload.region);
+    // else if (Number(payload.horseClass) < 1 || Number(payload.horseClass) > 8 || (typeof(payload.horseClass) !== "number" && payload.horseClass !== '?') )
+    //     res.status(400).send("Invalid horse tier: " + payload.horseClass);
+    // else if( typeof(payload.time) !== "number" || payload.time === null || payload.time === undefined )
+    //     res.status(400).send("Invalid time");
+    // else {
+    //     db.update(payload.region, payload.serverid, Number(payload.time), payload.horseClass);
+    //     res.send();
+    // }
 });
 
 router.get('/data', function (req, res) {

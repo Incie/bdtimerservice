@@ -1,6 +1,5 @@
 /* TODO
 - Don't show horse tier highlight after race is over?
-- Add a "?" option to horse tier selection (we can 0 as unknown for horse tier) which makes it possible to submit a race time without knowing horse tier.
 */
 
 let express = require('express');
@@ -17,12 +16,11 @@ let app = express();
 
 app.use(morgan(':date[iso] - (HTTP :http-version :status :method) [ip] :real-ip [time] :response-time[3] ms [response-size] :res[content-length] [url] :url'));
 
-if( process.env.ENVIRONMENT === "DEVELOPMENT" ){
-    console.log('Setting DEVELOPMENT session configs');
-    morgan.token('real-ip', function(req, res) { return req.connection.remoteAddress; });
-} else {
+if( process.env.ENVIRONMENT === "NGINX" )
     morgan.token('real-ip', function(req, res) { return req.headers['x-real-ip']; });
-}
+else
+    morgan.token('real-ip', function(req, res) { return req.connection.remoteAddress; });
+
 
 app.use(bodyParser.json({limit: '2mb'}));
 app.use(bodyParser.urlencoded({extended: false, limit: '2mb'}));

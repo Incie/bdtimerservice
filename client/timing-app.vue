@@ -50,12 +50,7 @@
                 let hash = document.location.hash;
                 hash = hash.substr(1, hash.length - 1);
 
-				//We'll uncomment this once more security is needed (ie, once silly butts start spamming site with false data)
-				/*if (hash.includes('&submitallowed')) {
-                    this.submitAllowed = true;
-                    hash = hash.replace('&submitallowed', '');
-                }*/
-				this.submitAllowed = true;
+				this.submitAllowed = false;
 
                 if (hash !== 'eu' && hash !== 'us')
                     hash = 'eu';
@@ -95,7 +90,7 @@
 </script>
 <template>
     <span>
-        <timing-dialog :submit-allowed="submitAllowed"></timing-dialog>
+        <!--<timing-dialog :submit-allowed="submitAllowed"></timing-dialog>-->
         <div style="margin-bottom: 15px;">
             <span style="font-size: 150%">Region</span>
             <region-select region="us" :selected-region="region" v-on:new-region="setRegion('us')"></region-select>
