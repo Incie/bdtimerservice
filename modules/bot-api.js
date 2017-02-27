@@ -12,8 +12,9 @@ const authorizedChannels = [
 const vroomUrl = `http://horsevroomvroom.com:${process.env.PORT || 3000}`;
 
 const helpTexts = [
-    "!race :region :server :tier :time :registration",
-    "!race [us|eu] [Velia|Balenos|Serendia|Calpheon|Mediah|Valencia] [Tier?|1|2|3|4|5|6|7|8] [50m] [registration]"
+    "!race :channel :tier :time :registration",
+    "!race [Velia|Balenos|Serendia|Calpheon|Mediah|Valencia] [Tier?|1|2|3|4|5|6|7|8] [50m] [registration]",
+    "Example: !race med t8 60m"
 ];
 
 /**
@@ -37,7 +38,109 @@ BotApi.GetVroomUrl = function(){
 /**
  * @return {string}
  */
-BotApi.ParseRace = function(botCommand){
+BotApi.ParseRace = function(botCommand, channelName){
+    
+    //Vars for tracking parse progress
+    let acquiredRegion = false, acquiredChannel = false, acquiredTier = false, acquiredTime = false, acquiredRegistration = false; 
+    
+    //Parsed race values
+    let region, channelResult, tierResult, minuteResult, registration = false; 
+
+    //Region might be in channelName, so start by checking that (TODO: Is it okay that channel names are hardcoded in here?)
+    if(channelName == "eu_seasoned_race_times")
+    {
+        region = "eu";
+        acquiredRegion = true;
+    }
+    else if (channelName == "na_seasoned_race_info")
+    {
+        region = "us";
+        acquiredRegion = true;
+    }
+
+    //Iterate through entire string
+    const splits = botCommand.toLowerCase().split(' ');
+    let num = 0;
+    while(1)
+    {
+        num++;
+        if(num >= splits.length)
+            break;
+        if(!acquiredRegion)
+        {
+            if(splits[num] == "us" || splits[num] == "na")
+            {
+                region = "us";
+                acquiredRegion = true;
+                continue;
+            }
+            else if(splits[num] == "eu")
+            {
+                region = "eu";
+                acquiredRegion = true;
+                continue;
+            }
+        }
+        if(!acquiredChannel)
+        {
+            channelResult = parser.parseServer(splits[num])
+            if(channelResult.success)
+            {
+                acquiredChannel = true;
+                continue;
+            }
+        }
+        if(!acquiredTier)
+        {
+            tierResult = parser.parseTier(splits[num])
+            if(tierResult.success)
+            {
+                acquiredTier = true;
+                continue;
+            }
+        }
+        if(!acquiredTime)
+        {
+            minuteResult = parser.parseMinutes(splits[num])
+            if(minuteResult.success)
+            {
+                acquiredTime = true;
+                continue;
+            }
+        }
+        if(!acquiredRegistration)
+        {
+            if(splits[num] == 'registration' || splits[num] == 'reg')
+            {
+                acquiredRegistration = true;
+                registration = true;
+            }
+        }
+        break;
+    }
+    
+    if(!acquiredRegion || !acquiredChannel || !acquiredTier || !acquiredTime)
+    {
+        //TODO: Give more information to user
+        return "Missing or invalid information in race announcement.";
+    }
+    
+    if(registration == true)
+        minuteResult.value -= 5;
+    
+    let timestamp = new Date().getTime() + Number(minuteResult.value) * 60 * 1000;
+    if( this.registrationAvailable )
+        timestamp -=  (5 * 60 + 15) * 60 * 1000;
+    
+    db.update(region, channelResult.value.index, timestamp, tierResult.value);
+
+    let minuteString = registration ?
+                        "registration closes in " + (minuteResult.value+5) + "m" :
+                        minuteResult.value + "m until registration";
+                        
+    return `${channelResult.value.name}[${region}] with Tier ${tierResult.value} & ${minuteString}`;
+    
+/*
     const splits = botCommand.toLowerCase().split(' ');
 
     if( splits.length !== 5 && splits.length !== 6 ){
@@ -94,6 +197,7 @@ BotApi.ParseRace = function(botCommand){
                         minuteResult.value + "m until registration";
 
     return `${serverResult.value.name}[${region}] with Tier ${tierResult.value} & ${minuteString}`;
+    */
 };
 
 
