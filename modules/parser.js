@@ -33,7 +33,7 @@ function success(value, name) {
 
 
 function parseServer(input){
-    const serverInput = input.toLowerCase(input);
+    const serverInput = input.toLowerCase();
 
     let serverIndex = -1;
     serverNames.every( (s, i) => {

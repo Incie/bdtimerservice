@@ -35,25 +35,19 @@ BotApi.GetVroomUrl = function(){
     return vroomUrl;
 };
 
-/**
- * @return {string}
- */
-BotApi.ParseRace = function(botCommand, channelName){
-    
+BotApi.ParseRace = function(botCommand, channelName) {
     //Vars for tracking parse progress
-    let acquiredRegion = false, acquiredChannel = false, acquiredTier = false, acquiredTime = false, acquiredRegistration = false; 
-    
+    let acquiredRegion = false, acquiredChannel = false, acquiredTier = false, acquiredTime = false, acquiredRegistration = false;
+
     //Parsed race values
-    let region, channelResult, tierResult, minuteResult, registration = false; 
+    let region, channelResult, tierResult, minuteResult, registration = false;
 
     //Region might be in channelName, so start by checking that (TODO: Is it okay that channel names are hardcoded in here?)
-    if(channelName == "eu_seasoned_race_times")
-    {
+    if (channelName == "eu_seasoned_race_times") {
         region = "eu";
         acquiredRegion = true;
     }
-    else if (channelName == "na_seasoned_race_info")
-    {
+    else if (channelName == "na_seasoned_race_info") {
         region = "us";
         acquiredRegion = true;
     }
@@ -61,85 +55,93 @@ BotApi.ParseRace = function(botCommand, channelName){
     //Iterate through entire string
     const splits = botCommand.toLowerCase().split(' ');
     let num = 0;
-    while(1)
-    {
+    while (1) {
         num++;
-        if(num >= splits.length)
+        if (num >= splits.length)
             break;
-        if(!acquiredRegion)
-        {
-            if(splits[num] == "us" || splits[num] == "na")
-            {
+        if (!acquiredRegion) {
+            if (splits[num] == "us" || splits[num] == "na") {
                 region = "us";
                 acquiredRegion = true;
                 continue;
             }
-            else if(splits[num] == "eu")
-            {
+            else if (splits[num] == "eu") {
                 region = "eu";
                 acquiredRegion = true;
                 continue;
             }
         }
-        if(!acquiredChannel)
-        {
-            channelResult = parser.parseServer(splits[num])
-            if(channelResult.success)
-            {
+        if (!acquiredChannel) {
+            channelResult = parser.parseServer(splits[num]);
+            if (channelResult.success) {
                 acquiredChannel = true;
                 continue;
             }
         }
-        if(!acquiredTier)
-        {
-            tierResult = parser.parseTier(splits[num])
-            if(tierResult.success)
-            {
+        if (!acquiredTier) {
+            tierResult = parser.parseTier(splits[num]);
+            if (tierResult.success) {
                 acquiredTier = true;
                 continue;
             }
         }
-        if(!acquiredTime)
-        {
-            minuteResult = parser.parseMinutes(splits[num])
-            if(minuteResult.success)
-            {
+        if (!acquiredTime) {
+            minuteResult = parser.parseMinutes(splits[num]);
+            if (minuteResult.success) {
                 acquiredTime = true;
                 continue;
             }
         }
-        if(!acquiredRegistration)
-        {
-            if(splits[num] == 'registration' || splits[num] == 'reg')
-            {
+        if (!acquiredRegistration) {
+            if (splits[num] == 'registration' || splits[num] == 'reg') {
                 acquiredRegistration = true;
                 registration = true;
                 continue;
             }
         }
     }
-    
-    if(!acquiredRegion || !acquiredChannel || !acquiredTier || !acquiredTime)
-    {
+
+    if (!acquiredRegion || !acquiredChannel || !acquiredTier || !acquiredTime) {
         //TODO: Give more information to user
-        return "Missing or invalid information in race announcement.";
+        return {
+            reason: "Missing or invalid information in race announcement.",
+            success: false
+        };
     }
-    
-    if(registration == true)
+
+    if (registration == true)
         minuteResult.value -= 5;
-    
-    let timestamp = new Date().getTime() + Number(minuteResult.value) * 60 * 1000;
+
+    return {
+        success: true,
+        values: {
+            minutes: minuteResult.value,
+            tier: tierResult.value,
+            channel: channelResult.value,
+            region: region,
+            registration: registration
+        }
+    };
+};
+
+/**
+ * @return {string}
+ */
+BotApi.CommitResult = function(values){
+    let timestamp = new Date().getTime() + Number(values.minutes) * 60 * 1000;
     if( this.registrationAvailable )
         timestamp -=  (5 * 60 + 15) * 60 * 1000;
-    
-    db.update(region, channelResult.value.index, timestamp, tierResult.value);
 
-    let minuteString = registration ?
-                        "registration closes in " + (minuteResult.value+5) + "m" :
-                        minuteResult.value + "m until registration";
-                        
-    return `${channelResult.value.name}[${region}] with Tier ${tierResult.value} & ${minuteString}`;
-    
+    db.update(values.region, values.channel.index, timestamp, values.tier);
+
+    let minuteString = values.registration ?
+        "registration closes in " + (values.minutes+5) + "m" :
+        values.minutes + "m until registration";
+
+    return `${values.channel}[${values.region}] with Tier ${values.tier} & ${minuteString}`;
+};
+
+
 /*
     const splits = botCommand.toLowerCase().split(' ');
 
@@ -198,7 +200,6 @@ BotApi.ParseRace = function(botCommand, channelName){
 
     return `${serverResult.value.name}[${region}] with Tier ${tierResult.value} & ${minuteString}`;
     */
-};
 
 
 module.exports = BotApi;
