@@ -149,7 +149,7 @@ BotApi.ParseRace = function(botCommand, channelName){
 
     let region = splits[1];
     if( region !== 'us' && region !== 'eu' && region !== 'na' ){
-        return `Invalid Parameter for 'region': '${region}', must be eu or us`;
+        return `Invalid Parameter for 'region': '${region}', must be eu or us (or na)`;
     }
 
     const serverParameter = splits[2];
