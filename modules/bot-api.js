@@ -114,9 +114,9 @@ BotApi.ParseRace = function(botCommand, channelName){
             {
                 acquiredRegistration = true;
                 registration = true;
+                continue;
             }
         }
-        break;
     }
     
     if(!acquiredRegion || !acquiredChannel || !acquiredTier || !acquiredTime)
