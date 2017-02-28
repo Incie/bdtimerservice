@@ -95,7 +95,9 @@ BotApi.ParseRace = function(botCommand, channelName) {
         }
 
         if( result !== undefined && result.success === true ){
-            commandData[result.result.type] = result.result.value;
+            if( commandData[result.result.type] === undefined ){
+                commandData[result.result.type] = result.result.value;
+            }
         }
     }
 

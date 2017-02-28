@@ -89,8 +89,8 @@ function parseTier(input){
     });
 
 
-    if( Number.isInteger( Number(tierId) )){
-        const n = Number(tierId);
+    if( Number.isInteger( Number.parseInt(tierId) )){
+        const n = Number.parseInt(tierId);
         if( n >= 1 && n <= 8 ){
             return success(tierId, 'tier');
         }
@@ -114,7 +114,7 @@ function parseMinutes(input){
         return true;
     });
 
-    minutes = Number(minutes);
+    minutes = Number.parseInt(minutes);
 
     if( Number.isInteger(minutes) ) {
         if (minutes >= 0 && minutes <= 60) {
