@@ -2,6 +2,11 @@ const botApi = require('./../modules/bot-api');
 
 const data = [
     {value: "!race va t? 5m", expect: true},
+    {value: "!race valencia 2 tier ? 5 min", expect: true},
+    {value: "!race t ? 5 m val", expect: true},
+    {value: "!race 5 m t ? val", expect: true},
+    {value: "!race 61 m t ? valencia 2", expect: false},
+    {value: "!race 61 m t ? valencia 2", expect: false},
     {value: "!race va t? 5m reg", expect: true},
     {value: "!race va t? 5m registration", expect: true},
     {value: "!race va 5m t?", expect: true},
@@ -17,7 +22,7 @@ const data = [
 
 const channels = ["eu_seasoned_race_times", "na_seasoned_race_info"];
 
-console.log('---testing---')
+console.log('---testing---');
 data.forEach( command => {
     channels.forEach( channel => {
         const result = botApi.ParseRace(command.value, channel);

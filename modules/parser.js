@@ -52,7 +52,28 @@ function parseServer(input){
     if( serverIndex === -1 )
         return fail(input, `Invalid server alias '${input}'`);
 
-    return success({index: serverIndex, name: capitalizeFirstLetter(serverNames[serverIndex].name)}, 'server');
+    return success({index: serverIndex, name: capitalizeFirstLetter(serverNames[serverIndex].name)}, 'channel');
+}
+
+const regions = {
+    us: 'us',
+    na: 'us',
+    eu: 'eu'
+};
+
+
+function parseRegion(input){
+    let regionValue = regions[input];
+
+    if( regionValue === undefined )
+        return fail();
+    return success(regionValue, 'region');
+}
+
+function parseRegistration(input){
+    if( input === 'reg' || input === 'registration' )
+        return success(true, 'registration');
+    return fail();
 }
 
 function parseTier(input){
@@ -110,4 +131,6 @@ module.exports = {
     parseTier,
     parseMinutes,
     parseServer,
+    parseRegion,
+    parseRegistration
 };

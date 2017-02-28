@@ -16,24 +16,12 @@ discordClient.on('message', message => {
     if( !botApi.IsValidChannel(message.channel.name) )
         return;
 
-    /** TODO: Authorize Roles **/
-
-
-    /** Parse Command **/
-
-    // tokenize
-     //foreach token
-
     if( message.content === "!cmd" || message.content === "!command" || message.content === "!race" || message.content === "!help" ){
         botApi.HelpTexts().forEach(t => message.channel.sendMessage(t) );
-        return;
     }
-
     else if( message.content === "!link" ){
         message.channel.sendMessage(botApi.GetVroomUrl());
-        return;
     }
-
     else if( message.content.startsWith('!race ') ){
         console.log(`Race Command from '${message.author.username}': '${message.content}'`);
         const response = botApi.ParseRace(message.content, message.channel.name);
