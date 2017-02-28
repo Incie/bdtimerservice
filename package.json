@@ -16,6 +16,7 @@
     "jsonfile": "^2.4.0",
     "konami-js": "0.0.2",
     "morgan": "~1.7.0",
+    "rotating-file-stream": "^1.1.9",
     "serve-favicon": "~2.3.2"
   },
   "devDependencies": {

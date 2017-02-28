@@ -10,12 +10,13 @@ let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
 let db = require('./modules/db');
 let fs = require('fs');
+let rfs = require('rotating-file-stream');
 
 let apiRouter = require('./modules/api.js');
 
 let app = express();
 
-let accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), {flags: 'a'});
+let accessLogStream = rfs("access.log", {interval:'1d'});
 const logFormat = ':date[iso] - (HTTP :http-version :status :method) [ip] :real-ip [time] :response-time[3] ms [response-size] :res[content-length] [url] :url';
 const logOptions = {stream: accessLogStream};
 app.use(morgan(logFormat, logOptions));
