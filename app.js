@@ -16,9 +16,16 @@ let apiRouter = require('./modules/api.js');
 
 let app = express();
 
-let accessLogStream = rfs("access.log", {path:'logs/', interval:'1d'});
+
 const logFormat = ':date[iso] - (HTTP :http-version :status :method) [ip] :real-ip [time] :response-time[3] ms [response-size] :res[content-length] [url] :url';
-const logOptions = {stream: accessLogStream};
+let logOptions = {};
+if( process.env.LOG === 'file' ) {
+    console.log("LOGGING TO FILE");
+    logOptions.stream = rfs("access.log", {path: 'logs/', interval: '1d'});
+} else {
+    console.log("LOGGING TO CONSOLE");
+}
+
 app.use(morgan(logFormat, logOptions));
 
 if( process.env.ENVIRONMENT === "DEVELOPMENT" ){
