@@ -26,8 +26,8 @@ discordClient.on('message', message => {
         console.log(`Race Command from '${message.author.username}': '${message.content}'`);
         const response = botApi.ParseRace(message.content, message.channel.name);
         if( response.success === true ){
-            botApi.CommitResult(response.values);
-            message.channel.sendMessage(`${message.member.displayName}: ${response}`);
+            const responseMessage = botApi.CommitResult(response.values);
+            message.channel.sendMessage(`${message.member.displayName}: ${responseMessage}`);
         } else {
             message.channel.sendMessage(`${message.member.displayName}: ${response.reason}`);
         }
