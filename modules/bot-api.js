@@ -134,7 +134,7 @@ BotApi.CommitResult = function(values){
         "registration closes in " + (values.minutes+5) + "m" :
         values.minutes + "m until registration";
 
-    return `${values.channel}[${values.region}] with Tier ${values.tier} & ${minuteString}`;
+    return `${values.channel.name}[${values.region}] with Tier ${values.tier} & ${minuteString}`;
 };
 
 module.exports = BotApi;
