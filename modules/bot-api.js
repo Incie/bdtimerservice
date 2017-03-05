@@ -5,8 +5,8 @@ let BotApi = {};
 
 const authorizedChannels = [
     "bot-test",
-    "eu_seasoned_race_times",
-    "na_seasoned_race_info"
+    "eu-racing_times",
+    "na-racing_times"
 ];
 
 const vroomUrl = `http://horsevroomvroom.com:${process.env.PORT || 3000}`;
@@ -75,9 +75,9 @@ BotApi.ParseRace = function(botCommand, channelName) {
     };
 
     //Region might be in channelName, so start by checking that (TODO: Is it okay that channel names are hardcoded in here?)
-    if (channelName == "eu_seasoned_race_times")
+    if (channelName == "eu-racing_times")
         commandData['region'] = 'eu';
-    else if (channelName == "na_seasoned_race_info")
+    else if (channelName == "na-racing_times")
         commandData['region'] = 'us';
 
     //Iterate through entire string
