@@ -5,16 +5,16 @@ let BotApi = {};
 
 const authorizedChannels = [
     "bot-test",
-    "eu-racing_times",
-    "na-racing_times"
+    "p-eu_racing_times",
+    "p-na_racing_times"
 ];
 
 const vroomUrl = `http://horsevroomvroom.com:${process.env.PORT || 3000}`;
 
 const helpTexts = [
     "!race :channel :tier :time :registration",
-    "!race [Velia|Balenos|Serendia|Calpheon|Mediah|Valencia] [Tier?|1|2|3|4|5|6|7|8] [50m] [registration]",
-    "Example: !race med t8 60m"
+    "!race [Velia|Balenos|Serendia|Calpheon|Mediah|Valencia] [Tier?|1|2|3|4|5|6|7|8] [50m] [reg]",
+    "Example: !r med t8 60m"
 ];
 
 const pipeline = [
@@ -71,13 +71,13 @@ BotApi.ParseRace = function(botCommand, channelName) {
         channel: undefined,
         tier: undefined,
         minutes: undefined,
-        registration: false
+        registration: undefined
     };
 
     //Region might be in channelName, so start by checking that (TODO: Is it okay that channel names are hardcoded in here?)
-    if (channelName == "eu-racing_times")
+    if (channelName == "p-eu_racing_times")
         commandData['region'] = 'eu';
-    else if (channelName == "na-racing_times")
+    else if (channelName == "p-na_racing_times")
         commandData['region'] = 'us';
 
     //Iterate through entire string
@@ -100,6 +100,9 @@ BotApi.ParseRace = function(botCommand, channelName) {
             }
         }
     }
+    
+    if(commandData['registration'] === undefined)
+        commandData['registration'] = false;
 
     for( let key in commandData ){
         if( commandData[key] === undefined ){
