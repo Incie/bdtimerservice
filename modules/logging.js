@@ -11,11 +11,13 @@ if( process.env.LOG === 'file' ) {
     console.log("LOGGING TO CONSOLE");
 }
 
-if( process.env.ENVIRONMENT === "DEVELOPMENT" ){
-    console.log('Setting DEVELOPMENT session configs');
-    morgan.token('real-ip', function(req, res) { return req.connection.remoteAddress; });
-} else {
+if( process.env.ENVIRONMENT === "NGINX" ) {
+    console.log("Setting Environment [ENVIRONMENT='NGINX']");
     morgan.token('real-ip', function(req, res) { return req.headers['x-real-ip']; });
+}
+else {
+    morgan.token('real-ip', function (req, res) {return req.connection.remoteAddress;});
+    console.log("Setting Environment [ENVIRONMENT!='NGINX']");
 }
 
 let logger = morgan(logFormat, logOptions);

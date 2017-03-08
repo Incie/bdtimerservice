@@ -31,9 +31,8 @@ app.listen(port, function () {
     console.log('Platform: ' + process.platform + ' ' + process.arch + '(' + process.pid + ')');
     console.log('cwd: ' + process.cwd());
 
-    console.log('Initializing discordbot.. ');
-
     if( process.env.DISCORDBOT === "ENABLE" ){
+        console.log('Initializing discordbot.. ');
         discordBot.init();
     } else {
         console.log("Discord Bot Disabled [DISCORDBOT !== 'enable']");
