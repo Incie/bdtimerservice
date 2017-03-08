@@ -16,10 +16,14 @@ let app = express();
 
 app.use(morgan(':date[iso] - (HTTP :http-version :status :method) [ip] :real-ip [time] :response-time[3] ms [response-size] :res[content-length] [url] :url'));
 
-if( process.env.ENVIRONMENT === "NGINX" )
+if( process.env.ENVIRONMENT === "NGINX" ) {
+    console.log("Setting Environment [ENVIRONMENT='NGINX']");
     morgan.token('real-ip', function(req, res) { return req.headers['x-real-ip']; });
-else
-    morgan.token('real-ip', function(req, res) { return req.connection.remoteAddress; });
+}
+else {
+    morgan.token('real-ip', function (req, res) {return req.connection.remoteAddress;});
+    console.log("Setting Environment [ENVIRONMENT!='NGINX']");
+}
 
 
 app.use(bodyParser.json({limit: '2mb'}));
@@ -38,5 +42,10 @@ app.listen(port, function () {
     console.log('cwd: ' + process.cwd());
 
     console.log('Initializing discordbot.. ');
-    discordBot.init();
+
+    if( process.env.DISCORDBOT === "ENABLE" ){
+        discordBot.init();
+    } else {
+        console.log("Discord Bot Disabled [DISCORDBOT !== 'enable']");
+    }
 });
