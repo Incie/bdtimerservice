@@ -1,5 +1,7 @@
 
 const tierTestData = [
+    {value: "t05", expect: false},
+    {value: "t05m", expect: false},
     {value: " ", expect: false},
     {value: "NaN", expect: false},
     {value: "", expect: false},
