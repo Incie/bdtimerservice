@@ -105,7 +105,8 @@ function parseTier(input){
 function parseMinutes(input){
     let minuteInput = input.toLowerCase();
 
-    let minutes = undefined;
+    //let minutes = undefined;
+    let minutes = minuteInput; //So that the ending ("m", etc) isn't necessary
     minuteEndings.every( ending => {
         if( minuteInput.endsWith(ending) ){
             minutes = minuteInput.replace(ending, '');
