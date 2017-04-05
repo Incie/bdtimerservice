@@ -16,28 +16,21 @@ discordClient.on('message', message => {
     if( !botApi.IsValidChannel(message.channel.name) )
         return;
 
-    /** TODO: Authorize Roles **/
-
-
-    /** Parse Command **/
-
-    // tokenize
-     //foreach token
-
-    if( message.content === "!cmd" || message.content === "!command" || message.content === "!race" || message.content === "!help" ){
+    if( message.content === "!cmd" || message.content === "!command" || message.content === "!race" || message.content === "!r" || message.content === "!help" ){
         botApi.HelpTexts().forEach(t => message.channel.sendMessage(t) );
-        return;
     }
-
     else if( message.content === "!link" ){
         message.channel.sendMessage(botApi.GetVroomUrl());
-        return;
     }
-
-    else if( message.content.startsWith('!race ') ){
+    else if( message.content.startsWith('!race ') || message.content.startsWith('!r ') ){
         console.log(`Race Command from '${message.author.username}': '${message.content}'`);
         const response = botApi.ParseRace(message.content, message.channel.name);
-        message.channel.sendMessage(message.member.displayName+ ": " + response);
+        if( response.success === true ){
+            const responseMessage = botApi.CommitResult(response.values);
+            message.channel.sendMessage(`${message.member.displayName}: ${responseMessage}`);
+        } else {
+            message.channel.sendMessage(`${message.member.displayName}: ${response.reason}`);
+        }
     }
 });
 
