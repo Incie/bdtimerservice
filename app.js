@@ -1,7 +1,3 @@
-/* TODO
-- Don't show horse tier highlight after race is over?
-*/
-
 let express = require('express');
 let path = require('path');
 let cookieParser = require('cookie-parser');
@@ -14,7 +10,7 @@ let apiRouter = require('./modules/api.js');
 
 let app = express();
 
-app.use(logger);
+app.use(logger.morgan);
 
 app.use(bodyParser.json({limit: '2mb'}));
 app.use(bodyParser.urlencoded({extended: false, limit: '2mb'}));
