@@ -51,7 +51,8 @@
             cssClass: function () {
                 return {
                     'btn-success': (this.timeLeftInMinutes > 5),
-                    'btn-warning': (this.timeLeftInMinutes >= -5 && this.timeLeftInMinutes <= 5)
+                    'btn-warning': (this.timeLeftInMinutes > 0 && this.timeLeftInMinutes <= 5),
+					'btn-danger': (this.timeLeftInMinutes >= -5 && this.timeLeftInMinutes <= 0)
                 };
             }
         }

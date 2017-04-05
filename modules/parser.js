@@ -1,10 +1,10 @@
 const serverNames = [
-    {aliases: ["velia2", "velia","ve", "vel"], name: "Velia 2"},
-    {aliases: ["balenos2", "balenos", "ba", "bal"], name: "Balenos 2"},
-    {aliases: ["serendia2", "serendia", "se", "ser"], name: "Serendia 2"},
-    {aliases: ["calpheon2", "calpheon", "ca", "cal"], name: "Calpheon 2"},
-    {aliases: ["mediah2", "mediah", "me", "med"], name: "Mediah 2"},
-    {aliases: ["valencia2", "valencia", "va", "val"], name: "Valencia 2"},
+    {aliases: ["velia2", "velia", "ve", "vel", "vel2"], name: "Velia 2"},
+    {aliases: ["balenos2", "balenos", "ba", "bal", "bal2"], name: "Balenos 2"},
+    {aliases: ["serendia2", "serendia", "se", "ser", "ser2"], name: "Serendia 2"},
+    {aliases: ["calpheon2", "calpheon", "ca", "cal", "cal2"], name: "Calpheon 2"},
+    {aliases: ["mediah2", "mediah", "me", "med", "med2"], name: "Mediah 2"},
+    {aliases: ["valencia2", "valencia", "va", "val", "val2"], name: "Valencia 2"},
 ];
 
 
@@ -89,8 +89,8 @@ function parseTier(input){
     });
 
 
-    if( Number.isInteger( Number(tierId) )){
-        const n = Number(tierId);
+    if( Number.isInteger( Number.parseInt(tierId) )){
+        const n = Number.parseInt(tierId);
         if( n >= 1 && n <= 8 ){
             return success(tierId, 'tier');
         }
@@ -105,7 +105,8 @@ function parseTier(input){
 function parseMinutes(input){
     let minuteInput = input.toLowerCase();
 
-    let minutes = undefined;
+    //let minutes = undefined;
+    let minutes = minuteInput; //So that the ending ("m", etc) isn't necessary
     minuteEndings.every( ending => {
         if( minuteInput.endsWith(ending) ){
             minutes = minuteInput.replace(ending, '');
@@ -114,15 +115,15 @@ function parseMinutes(input){
         return true;
     });
 
-    minutes = Number(minutes);
+    minutes = Number.parseInt(minutes);
 
     if( Number.isInteger(minutes) ) {
-        if (minutes >= 0 && minutes <= 60) {
+        if (minutes >= 0 && minutes <= 70) {
             return success(minutes, 'minutes');
         }
     }
 
-    return fail(input, 'Minutes must be between [0-60] (or [0-5] for active registrations). Valid aliases 15m, 20min, 35minutes, 1minute');
+    return fail(input, 'Minutes must be between [0-70] (or [0-5] for active registrations). Valid aliases 15m, 20min, 35minutes, 1minute');
 }
 
 

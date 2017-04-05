@@ -5,16 +5,16 @@ let BotApi = {};
 
 const authorizedChannels = [
     "bot-test",
-    "eu_seasoned_race_times",
-    "na_seasoned_race_info"
+    "p-eu_racing_times",
+    "p-na_racing_times"
 ];
 
 const vroomUrl = `http://horsevroomvroom.com:${process.env.PORT || 3000}`;
 
 const helpTexts = [
     "!race :channel :tier :time :registration",
-    "!race [Velia|Balenos|Serendia|Calpheon|Mediah|Valencia] [Tier?|1|2|3|4|5|6|7|8] [50m] [registration]",
-    "Example: !race med t8 60m"
+    "!race [Velia|Balenos|Serendia|Calpheon|Mediah|Valencia] [Tier?|1|2|3|4|5|6|7|8] [50m] [reg]",
+    "Example: !r med t8 60m"
 ];
 
 const pipeline = [
@@ -71,13 +71,13 @@ BotApi.ParseRace = function(botCommand, channelName) {
         channel: undefined,
         tier: undefined,
         minutes: undefined,
-        registration: false
+        registration: undefined
     };
 
     //Region might be in channelName, so start by checking that (TODO: Is it okay that channel names are hardcoded in here?)
-    if (channelName == "eu_seasoned_race_times")
+    if (channelName == "p-eu_racing_times")
         commandData['region'] = 'eu';
-    else if (channelName == "na_seasoned_race_info")
+    else if (channelName == "p-na_racing_times")
         commandData['region'] = 'us';
 
     //Iterate through entire string
@@ -95,9 +95,14 @@ BotApi.ParseRace = function(botCommand, channelName) {
         }
 
         if( result !== undefined && result.success === true ){
-            commandData[result.result.type] = result.result.value;
+            if( commandData[result.result.type] === undefined ){
+                commandData[result.result.type] = result.result.value;
+            }
         }
     }
+    
+    if(commandData['registration'] === undefined)
+        commandData['registration'] = false;
 
     for( let key in commandData ){
         if( commandData[key] === undefined ){
@@ -132,7 +137,7 @@ BotApi.CommitResult = function(values){
         "registration closes in " + (values.minutes+5) + "m" :
         values.minutes + "m until registration";
 
-    return `${values.channel}[${values.region}] with Tier ${values.tier} & ${minuteString}`;
+    return `${values.channel.name}[${values.region}] with Tier ${values.tier} & ${minuteString}`;
 };
 
 module.exports = BotApi;

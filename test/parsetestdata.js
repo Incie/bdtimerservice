@@ -1,8 +1,12 @@
 
 const tierTestData = [
+    {value: "t05", expect: false},
+    {value: "t05m", expect: false},
     {value: " ", expect: false},
     {value: "NaN", expect: false},
     {value: "", expect: false},
+    {value: "t", expect: false},
+    {value: "tier", expect: false},
     {value: "t0", expect: false},
     {value: "t1", expect: true},
     {value: "t2", expect: true},
@@ -42,12 +46,17 @@ const tierTestData = [
 ];
 
 const minuteTestData = [
+    {value:'m', expect: false},
+    {value:'minute', expect: false},
+    {value:'minutes', expect: false},
+    {value:'min', expect: false},
     {value:'', expect: false},
     {value:' ', expect: false},
     {value:'123', expect: false},
     {value:'2', expect: false},
     {value:'1m', expect: true},
     {value:'60m', expect: true},
+    {value:'61m', expect: false},
     {value:'1min', expect: true},
     {value:'24min', expect: true},
     {value:'66min', expect: false},
