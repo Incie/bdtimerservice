@@ -1,9 +1,10 @@
 const webpack = require('webpack');
+const path = require('path');
 
 module.exports = {
-    entry: './client/bootstrap-timingsapp.js',
+    entry: path.resolve(__dirname, 'client/bootstrap-timingsapp.js'),
     output: {
-        path: './public/javascripts/',
+        path: path.resolve(__dirname, 'public/javascripts/'),
         filename: 'timings.bundle.js'
     },
     // eslint: {
