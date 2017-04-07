@@ -2,14 +2,30 @@ const Discord = require('discord.js');
 const logging = require('./logging');
 const botApi = require('./bot-api');
 
+let discordClient = undefined;
+
+process.on('exit', () => destroyClient() );
+process.on('SIGINT', () => destroyClient() );
+
+function destroyClient(onSuccess, onError){
+    if( discordClient !== undefined ){
+        if( callback !== undefined )
+            discordClient.destroy().then(onSuccess).catch(onError);
+        else discordClient.destroy();
+
+        discordClient = undefined;
+    }
+}
+
 function init() {
     console.log('discordbot init called...');
     logging.winston.info('discordbot init called...');
 
-    let discordClient = new Discord.Client();
+    discordClient = new Discord.Client();
 
     discordClient.on('ready', () => {
         console.log('discord-bot is ready..');
+        logging.winston.error('discord-bot is ready..');
     });
 
     discordClient.on('error', error => {
@@ -23,10 +39,7 @@ function init() {
 
         setTimeout(() => {
             logging.winston.log('destroying current client..');
-            discordClient.destroy().then(() => {
-                logging.winston.warn('client destroyed');
-                init();
-            }).catch((e) => logging.winston.error('destroy failed..' + JSON.stringify(e)));
+            destroyClient( () => { logging.winston.warn('client destroyed'); init();}, (e) => logging.winston.error('destroy failed..' + JSON.stringify(e)));
         }, 5000);
     });
 
@@ -57,7 +70,7 @@ function init() {
         }
     });
 
-    discordClient.login(process.env.TOKENBOT).then(s => console.log(s));
+    discordClient.login(process.env.TOKENBOT).then(s => console.log('login`d'));
 }
 
 module.exports = {

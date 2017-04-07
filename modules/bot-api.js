@@ -134,8 +134,8 @@ BotApi.CommitResult = function(values){
     db.update(values.region, values.channel.index, timestamp, values.tier);
 
     let minuteString = values.registration ?
-                        "registration closes in " + (values.minutes+5) + "m" :
-                        values.minutes + "m until registration";
+                        `"registration closes in ${values.minutes+5}m` :
+                        `${values.minutes}m until registration`;
 
     return `${values.channel.name}[${values.region}] with Tier ${values.tier} & ${minuteString}`;
 };
