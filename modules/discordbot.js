@@ -9,9 +9,9 @@ process.on('SIGINT', () => destroyClient() );
 
 function destroyClient(onSuccess, onError){
     if( discordClient !== undefined ){
-        if( callback !== undefined )
-            discordClient.destroy().then(onSuccess).catch(onError);
-        else discordClient.destroy();
+        if( onSuccess === undefined )
+            discordClient.destroy();
+        else discordClient.destroy().then(onSuccess).catch(onError);
 
         discordClient = undefined;
     }
